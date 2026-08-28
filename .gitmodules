@@ -22,3 +22,9 @@
 [submodule "bsp/stm32-bsp-common"]
 	path = bsp/Common
 	url = git@github.com:STMicroelectronics/stm32-bsp-common.git
+[submodule "third_party/stm32-mw-fatfs"]
+	path = third_party/FatFs
+	url = git@github.com:STMicroelectronics/stm32-mw-fatfs.git
+[submodule "bsp/stm32-mfxstm32l152"]
+	path = bsp/stm32-mfxstm32l152
+	url = git@github.com:STMicroelectronics/stm32-mfxstm32l152.git

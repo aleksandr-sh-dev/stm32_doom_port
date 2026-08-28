@@ -54,6 +54,7 @@ dkms.conf
 
 # Build
 build/
+build_bootloader/
 
 # Binaries
 *.bin
