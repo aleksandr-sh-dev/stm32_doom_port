@@ -72,10 +72,15 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
 )
 
+# Apply QSPI linker script to the main application
+target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
+    -T${CMAKE_CURRENT_SOURCE_DIR}/STM32F750xx_QSPI_FLASH.ld
+)
+
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 
 # Add linked libraries
-target_link_libraries(${CMAKE_PROJECT_NAME}
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     core
     bsp
     app

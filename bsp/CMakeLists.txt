@@ -8,6 +8,7 @@ set(BSP_SUBMODULES
     stm32-n25q128a
     stm32-rk043fn48h
     stm32-wm8994
+    stm32-mfxstm32l152
     stm32-f7508-dk-bsp
 )
 
