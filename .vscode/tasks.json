@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build: Debug",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "CMake: Debug"
+            ],
+            "command": "ninja",
+            "args": [
+                "-C",
+                "${workspaceFolder}/build/Debug"
+            ]
+        },
+        {
+            "label": "CMake: Debug",
+            "type": "shell",
+            "hide": true,
+            "command": "/usr/bin/cmake",
+            "args": [
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DCMAKE_TOOLCHAIN_FILE=${workspaceFolder}/cmake/gcc-arm-none-eabi.cmake",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE",
+                "-S", "${workspaceFolder}",
+                "-B", "${workspaceFolder}/build/Debug",
+                "-G", "Ninja"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "projectName": "doom_port",
+    "configurations":[
+        {
+            "name": "Debug (JLink)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "jlink",
+            "serverArgs": [],
+            "device": "STM32F750N8",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "executable": "${workspaceFolder}/build/Debug/doom_port.elf",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "",
+            "targetProcessor": 0,
+            "preLaunchCommands": [
+                "monitor reset",
+                "monitor halt"
+            ],
+            "showDevDebugOutput": "raw"
+        }
+]
+}
