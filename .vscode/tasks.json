@@ -18,6 +18,22 @@
             ]
         },
         {
+            "label": "Format Code",
+            "type": "shell",
+            "command": "find core app -type f \\( -name '*.c' -o -name '*.h' -o -name '*.cpp' -o -name '*.hpp' \\) -exec clang-format -i -style=file {} +",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        // HIDDEN INTERNAL TASKS
+        {
             "label": "CMake: Debug",
             "type": "shell",
             "hide": true,

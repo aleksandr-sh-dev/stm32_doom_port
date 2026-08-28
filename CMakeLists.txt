@@ -40,6 +40,9 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/libs/lwprintf/lwprintf/library.cmake)
 # Add core sources
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/cmake/core)
 
+# Add BSP directory
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/bsp)
+
 # Add application directory
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/app)
 
@@ -74,6 +77,7 @@ list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
     core
+    bsp
     app
     lwprintf
 )

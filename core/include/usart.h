@@ -22,4 +22,3 @@ void usart6_transmit(uint8_t *data, uint16_t size);
 #endif
 
 #endif /* __USART_H__ */
-
