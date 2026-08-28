@@ -1,0 +1,7 @@
+libs/
+build/
+third_party/
+drivers/
+
+*.json
+.github
