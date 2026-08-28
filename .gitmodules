@@ -1,0 +1,3 @@
+[submodule "libs/lwprintf"]
+	path = libs/lwprintf
+	url = git@github.com:MaJerle/lwprintf.git
