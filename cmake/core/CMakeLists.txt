@@ -12,8 +12,8 @@ set(MX_Defines_Syms
 # Include paths
 set(MX_Include_Dirs
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Inc/Legacy
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Inc/Legacy
     ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/FreeRTOS/Source/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/FreeRTOS/Source/CMSIS_RTOS_V2
     ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1
@@ -53,52 +53,52 @@ set(MX_Application_Src
 # STM32 HAL/LL Drivers
 set(STM32_Drivers_Src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/system_stm32f7xx.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_crc.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_crc_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_exti.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dcmi.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dcmi_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_eth.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_nor.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sram.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_nand.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dsi.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_qspi.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rtc.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rtc_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sai.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sai_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_mmc.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_spdifrx.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_spi.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_spi_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pcd.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pcd_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_usb.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_tim.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_tim_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_cortex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_crc.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_crc_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_rcc.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_rcc_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_flash.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_flash_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_gpio.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_dma.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_dma_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_pwr.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_pwr_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_i2c.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_i2c_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_exti.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_dcmi.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_dcmi_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_dma2d.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_eth.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_ll_fmc.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_nor.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_sram.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_nand.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_sdram.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_ltdc.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_ltdc_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_dsi.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_qspi.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_rtc.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_rtc_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_sai.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_sai_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_ll_sdmmc.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_sd.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_mmc.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_spdifrx.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_spi.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_spi_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_uart.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_uart_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_pcd.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_hal_pcd_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/stm32f7xx-hal-driver/Src/stm32f7xx_ll_usb.c
 )
 
 set(FreeRTOS_Src

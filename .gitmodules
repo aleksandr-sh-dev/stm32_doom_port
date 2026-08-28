@@ -1,3 +1,6 @@
 [submodule "libs/lwprintf"]
 	path = libs/lwprintf
 	url = git@github.com:MaJerle/lwprintf.git
+[submodule "drivers/stm32f7xx-hal-driver"]
+	path = drivers/stm32f7xx-hal-driver
+	url = git@github.com:STMicroelectronics/stm32f7xx-hal-driver.git
