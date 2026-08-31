@@ -24,7 +24,7 @@ set(MX_Include_Dirs
 
 #  Application sources
 set(MX_Application_Src
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/main.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../app/main.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/gpio.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/freertos.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/crc.c

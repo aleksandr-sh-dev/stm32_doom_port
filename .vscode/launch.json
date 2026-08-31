@@ -3,23 +3,61 @@
     "projectName": "doom_port",
     "configurations":[
         {
-            "name": "Debug (JLink)",
+            "name": "Debug: Bootloader",
             "type": "cortex-debug",
             "request": "launch",
-            "servertype": "jlink",
+            "showDevDebugOutput": "raw",
+            "servertype": "stutil",
+            "serverArgs": [],
+            "device": "STM32F750N8",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "executable": "${workspaceFolder}/build_bootloader/stm32f7508_bootloader.elf",
+            "cwd": "${workspaceFolder}",
+            "svdFile": "STM32F750.svd",
+            "swoConfig": {
+                "enabled": true,
+                "cpuFrequency": 216000000,
+                "swoFrequency": 4000000,
+                "source": "probe",
+                "decoders": [
+                    {
+                        "label": "ITM port 0 output",
+                        "type": "console",
+                        "port": 0,
+                        "showOnStartup": true,
+                        "encoding": "ascii"
+                    }
+                ],
+            }
+        },
+        {
+            "name": "Debug: Application",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "stutil",
             "serverArgs": [],
             "device": "STM32F750N8",
             "interface": "swd",
             "runToEntryPoint": "main",
             "executable": "${workspaceFolder}/build/Debug/doom_port.elf",
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "",
-            "targetProcessor": 0,
-            "preLaunchCommands": [
-                "monitor reset",
-                "monitor halt"
-            ],
-            "showDevDebugOutput": "raw"
+            "svdFile": "STM32F750.svd",
+            "swoConfig": {
+                "enabled": true,
+                "cpuFrequency": 216000000,
+                "swoFrequency": 4000000,
+                "source": "probe",
+                "decoders": [
+                    {
+                        "label": "ITM port 0 output",
+                        "type": "console",
+                        "port": 0,
+                        "showOnStartup": true,
+                        "encoding": "ascii"
+                    }
+                ],
+            }
         }
 ]
 }

@@ -2,6 +2,7 @@ libs/
 build/
 third_party/
 drivers/
+bootloader/
 
 *.json
 .github
