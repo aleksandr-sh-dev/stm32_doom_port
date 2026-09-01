@@ -3,13 +3,12 @@ cmake_minimum_required(VERSION 3.22)
 add_library(bsp STATIC)
 
 set(BSP_SUBMODULES
-    Common
-    stm32-ft5336
-    stm32-n25q128a
-    stm32-rk043fn48h
-    stm32-wm8994
-    stm32-mfxstm32l152
-    stm32-f7508-dk-bsp
+    bsp/
+    bsp/STM32F7508/Common
+    bsp/STM32F7508/Components
+    bsp/STM32F7508/stm32f7508-dk-bsp
+    Utilities/
+    Utilities/Fonts
 )
 
 foreach(submodule IN LISTS BSP_SUBMODULES)

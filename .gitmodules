@@ -5,26 +5,29 @@
 	path = drivers/stm32f7xx-hal-driver
 	url = git@github.com:STMicroelectronics/stm32f7xx-hal-driver.git
 [submodule "bsp/stm32f7508-dk-bsp"]
-	path = bsp/stm32f7508-dk-bsp
+	path = board/bsp/STM32F7508/stm32f7508-dk-bsp
 	url = git@github.com:STMicroelectronics/stm32f7508-dk-bsp.git
 [submodule "bsp/stm32-wm8994"]
-	path = bsp/stm32-wm8994
+	path = board/bsp/STM32F7508/Components/wm8994
 	url = git@github.com:STMicroelectronics/stm32-wm8994.git
 [submodule "bsp/stm32-rk043fn48h"]
-	path = bsp/stm32-rk043fn48h
+	path = board/bsp/STM32F7508/Components/rk043fn48h
 	url = git@github.com:STMicroelectronics/stm32-rk043fn48h.git
 [submodule "bsp/stm32-n25q128a"]
-	path = bsp/stm32-n25q128a
+	path = board/bsp/STM32F7508/Components/n25q128a
 	url = git@github.com:STMicroelectronics/stm32-n25q128a.git
 [submodule "bsp/stm32-ft5336"]
-	path = bsp/stm32-ft5336
+	path = board/bsp/STM32F7508/Components/ft5336
 	url = git@github.com:STMicroelectronics/stm32-ft5336.git
 [submodule "bsp/stm32-bsp-common"]
-	path = bsp/Common
+	path = board/bsp/STM32F7508/Common
 	url = git@github.com:STMicroelectronics/stm32-bsp-common.git
 [submodule "third_party/stm32-mw-fatfs"]
 	path = third_party/FatFs
 	url = git@github.com:STMicroelectronics/stm32-mw-fatfs.git
 [submodule "bsp/stm32-mfxstm32l152"]
-	path = bsp/stm32-mfxstm32l152
+	path = board/bsp/STM32F7508/Components/mfxstm32l152
 	url = git@github.com:STMicroelectronics/stm32-mfxstm32l152.git
+[submodule "bsp/stm32-ov9655"]
+	path = board/bsp/STM32F7508/Components/ov9655
+	url = git@github.com:STMicroelectronics/stm32-ov9655.git

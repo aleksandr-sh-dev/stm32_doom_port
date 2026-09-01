@@ -8,6 +8,8 @@ target_sources(app PRIVATE ${app_sources})
 # Applications
 add_subdirectory(src/log)
 add_subdirectory(src/utils)
+add_subdirectory(src/config)
 
 target_link_libraries(app PRIVATE lwprintf)
 target_link_libraries(app PRIVATE core)
+target_link_libraries(app PRIVATE bsp)
