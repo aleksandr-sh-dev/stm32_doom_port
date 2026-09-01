@@ -49,7 +49,7 @@ set(MX_Application_Src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/sysmem.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/syscalls.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/system_stm32f7xx.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../startup_stm32f750xx.s
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/startup/startup_stm32f750xx.s
 )
 
 # STM32 HAL/LL Drivers
