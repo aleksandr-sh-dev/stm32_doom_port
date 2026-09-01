@@ -36,6 +36,8 @@
 
 /* Rename this file to "lwprintf_opts.h" for your application */
 
+#include "cmsis_os2.h"
+
 /*
  * Open "include/lwprintf/lwprintf_opt.h" and
  * copy & replace here settings you want to change values
@@ -43,5 +45,6 @@
 
 #define LWPRINTF_CFG_OS                1
 #define LWPRINTF_CFG_OS_MANUAL_PROTECT 0
+#define LWPRINTF_CFG_OS_MUTEX_HANDLE   osMutexId_t
 
 #endif /* LWPRINTF_OPTS_HDR_H */

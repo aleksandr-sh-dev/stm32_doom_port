@@ -34,9 +34,6 @@ enable_language(C ASM)
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME})
 
-# Lwprintf
-include(${CMAKE_CURRENT_SOURCE_DIR}/libs/lwprintf/lwprintf/library.cmake)
-
 # Add core sources
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/cmake/core)
 
@@ -45,6 +42,9 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/bsp)
 
 # Add application directory
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/app)
+
+# Add libs directory
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/cmake/libs)
 
 # Convert output to hex and binary
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
@@ -84,5 +84,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     core
     bsp
     app
+    libs
     lwprintf
 )
