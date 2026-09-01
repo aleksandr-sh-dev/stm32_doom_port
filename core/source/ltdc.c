@@ -65,7 +65,7 @@ void MX_LTDC_Init(void) {
     pLayerCfg.Alpha0          = 0;
     pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_PAxCA;
     pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;
-    pLayerCfg.FBStartAdress   = 0xC0000000;
+    pLayerCfg.FBStartAdress   = 0xC0000000; // Internal SDRAM address
     pLayerCfg.ImageWidth      = 480;
     pLayerCfg.ImageHeight     = 272;
     pLayerCfg.Backcolor.Blue  = 0;

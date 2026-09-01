@@ -157,7 +157,7 @@ void SystemInit(void) {
     SCB->CPACR |= ((3UL << 10 * 2) | (3UL << 11 * 2)); /* set CP10 and CP11 Full Access */
 #endif
 
-    RCC->CFGR = 0; // Reset the configuration register
+    RCC->CFGR = 0;         // Reset the configuration register
     SCB->VTOR = QSPI_BASE; // 0x90000000
 
     /* Configure the Vector Table location -------------------------------------*/

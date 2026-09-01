@@ -67,11 +67,10 @@ void start_task(void *argument) {
     UNUSED(argument);
 
     log_init();
+    lwprintf_printf("Logging init finished\r\n");
 
-    while(1) {
-        lwprintf_printf("Logging works\r\n");
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
+    // Finished initializing all applications, exit this thread
+    osThreadExit();
 }
 
 /**
@@ -109,7 +108,6 @@ int main(void) {
     MX_I2C1_Init();
     MX_I2C3_Init();
     MX_LTDC_Init();
-    // MX_QUADSPI_Init();
     MX_RTC_Init();
     MX_SAI2_Init();
     // MX_SDMMC1_SD_Init();
