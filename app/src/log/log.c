@@ -1,7 +1,14 @@
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "lwprintf/lwprintf.h"
+
+#include "stm32f7508_discovery_lcd.h"
 #include "usart.h"
+
+#include "config.h"
+#include "log.h"
+#include "lcd_log.h"
 
 #define LOG_UART_TIMEOUT_MS (100)
 
@@ -19,6 +26,13 @@ static int log_out(int ch, lwprintf_t *p) {
 }
 
 void log_init(void) {
-    lwprintf_init(log_out);
-    lwprintf_printf("Initialized logs\r\n");
+    if (LOG_MODE & UART_LOGGING) {
+        lwprintf_init(log_out);
+        lwprintf_printf("Initialized logs\r\n");
+    }
+
+    if (LOG_MODE & SCREEN_LOGGING) {
+        LCD_LOG_Init();
+        
+    }
 }

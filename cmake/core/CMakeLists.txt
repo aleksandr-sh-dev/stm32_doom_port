@@ -20,6 +20,7 @@ set(MX_Include_Dirs
     ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/CMSIS/Device/ST/STM32F7xx/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../drivers/CMSIS/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/FatFs/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../fonts
 )
 
 #  Application sources

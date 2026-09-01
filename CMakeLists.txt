@@ -38,7 +38,7 @@ add_executable(${CMAKE_PROJECT_NAME})
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/cmake/core)
 
 # Add BSP directory
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/bsp)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/board)
 
 # Add application directory
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/app)

@@ -38,6 +38,7 @@
 #include "fmc.h"
 
 #include "stm32f7xx_hal_def.h"
+#include "stm32f7508_discovery_lcd.h"
 
 // FreeRTOS
 #include "FreeRTOS.h"
@@ -50,6 +51,7 @@
 // Application
 #include "log.h"
 #include "lwprintf/lwprintf.h"
+#include "lcd_log.h"
 
 /* Private function prototypes -----------------------------------------------*/
 void        SystemClock_Config(void);
@@ -66,8 +68,22 @@ static const osThreadAttr_t start_task_attributes = {
 void start_task(void *argument) {
     UNUSED(argument);
 
+    // BSP LCD
+    BSP_LCD_Init();
+    BSP_LCD_LayerDefaultInit(1, LCD_FB_START_ADDRESS);
+    BSP_LCD_SelectLayer(1);
+    BSP_LCD_DisplayOn();
+
+    // Configure LCD
+    BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
+    BSP_LCD_SetFont(&jetbrains_mono_thin);
+
     log_init();
-    lwprintf_printf("Logging init finished\r\n");
+
+    while(1) {
+        LCD_DbgLog("Logging works\n");
+        osDelay(pdMS_TO_TICKS(10));
+    }
 
     // Finished initializing all applications, exit this thread
     osThreadExit();
@@ -107,7 +123,6 @@ int main(void) {
     MX_FMC_Init();
     MX_I2C1_Init();
     MX_I2C3_Init();
-    MX_LTDC_Init();
     MX_RTC_Init();
     MX_SAI2_Init();
     // MX_SDMMC1_SD_Init();
