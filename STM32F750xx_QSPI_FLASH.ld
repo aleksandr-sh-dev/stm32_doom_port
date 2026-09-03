@@ -40,6 +40,7 @@ MEMORY
   FLASH (rx)     : ORIGIN = 0x90000000, LENGTH = 16M
   ITCMRAM (xrw)  : ORIGIN = 0x00000000, LENGTH = 16K
   RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 320K
+  SDRAM (xrw)    : ORIGIN = 0xC0100000, LENGTH = 15M /* Other 1MB is used for frame buffer for display */
 }
 
 /* Define output sections */
@@ -150,7 +151,14 @@ SECTIONS
     . = ALIGN(8);
   } >RAM
 
-  
+  /* External SDRAM memory section */
+  .sdram_data (NOLOAD) :
+  {
+    . = ALIGN(4);
+    *(.sdram_data)
+    *(.sdram_data.*)
+    . = ALIGN(4);
+  } > SDRAM
 
   /* Remove information from the standard libraries */
   /DISCARD/ :
