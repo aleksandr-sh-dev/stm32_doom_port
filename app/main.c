@@ -38,6 +38,8 @@
 #include "fmc.h"
 
 #include "stm32f7xx_hal_def.h"
+
+// BSP
 #include "stm32f7508_discovery_lcd.h"
 
 // FreeRTOS
@@ -50,6 +52,7 @@
 
 // Application
 #include "log.h"
+#include "fatfs.h"
 #include "doomgeneric_stm32.h"
 
 /* Private function prototypes -----------------------------------------------*/
@@ -61,6 +64,8 @@ static void MPU_Config(void);
 #ifdef USE_SDRAM_MEMORY
 uint8_t ucHeap[configTOTAL_HEAP_SIZE] __attribute__((section(".sdram_data")));
 #endif // USE_SDRAM_MEMORY
+
+static const char *TAG = "MAIN";
 
 static osThreadId_t         start_task_h;
 static const osThreadAttr_t start_task_attributes = {
@@ -88,6 +93,14 @@ void start_task(void *argument) {
 
     // Init logging
     log_init();
+
+    // Check that SD card is present
+    if(BSP_SD_IsDetected() == SD_NOT_PRESENT) {
+        LOG_ERROR(TAG, "SD CARD HAS NOT BEEN DETECTED");
+        configASSERT(0);
+    } else {
+        LOG_DEBUG(TAG, "SDCard has been detected");
+    }
 
     // Init doomgeneric porting framework
     doomgeneric_init();
@@ -126,13 +139,11 @@ int main(void) {
     MX_CRC_Init();
     MX_DCMI_Init();
     MX_DMA2D_Init();
-    // MX_ETH_Init();
     MX_FMC_Init();
     MX_I2C1_Init();
     MX_I2C3_Init();
     MX_RTC_Init();
     MX_SAI2_Init();
-    MX_SDMMC1_SD_Init();
     MX_SPDIFRX_Init();
     MX_SPI2_Init();
     MX_TIM1_Init();
@@ -145,6 +156,9 @@ int main(void) {
     MX_USART6_UART_Init();
     MX_USB_OTG_FS_USB_Init();
     MX_USB_OTG_HS_PCD_Init();
+    MX_FATFS_Init();
+
+    // BSP
     BSP_LCD_Init();
 
     /* Init scheduler */
