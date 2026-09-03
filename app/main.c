@@ -80,11 +80,6 @@ void start_task(void *argument) {
 
     log_init();
 
-    while(1) {
-        LCD_DbgLog("Logging works\n");
-        osDelay(pdMS_TO_TICKS(10));
-    }
-
     // Finished initializing all applications, exit this thread
     osThreadExit();
 }

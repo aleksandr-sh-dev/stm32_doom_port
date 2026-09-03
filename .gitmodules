@@ -31,3 +31,6 @@
 [submodule "bsp/stm32-ov9655"]
 	path = board/bsp/STM32F7508/Components/ov9655
 	url = git@github.com:STMicroelectronics/stm32-ov9655.git
+[submodule "libs/doomgeneric"]
+	path = libs/doomgeneric
+	url = git@github.com:ozkl/doomgeneric.git
