@@ -46,5 +46,6 @@
 #define LWPRINTF_CFG_OS                1
 #define LWPRINTF_CFG_OS_MANUAL_PROTECT 0
 #define LWPRINTF_CFG_OS_MUTEX_HANDLE   osMutexId_t
+#define LWPRINTF_CFG_ENABLE_STD_NAMES  1
 
 #endif /* LWPRINTF_OPTS_HDR_H */

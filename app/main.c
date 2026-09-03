@@ -50,13 +50,17 @@
 
 // Application
 #include "log.h"
-#include "lwprintf/lwprintf.h"
-#include "lcd_log.h"
+#include "doomgeneric_stm32.h"
 
 /* Private function prototypes -----------------------------------------------*/
 void        SystemClock_Config(void);
 void        PeriphCommonClock_Config(void);
 static void MPU_Config(void);
+
+// FreeRTOS heap in SDRAM
+#ifdef USE_SDRAM_MEMORY
+uint8_t ucHeap[configTOTAL_HEAP_SIZE] __attribute__((section(".sdram_data")));
+#endif // USE_SDRAM_MEMORY
 
 static osThreadId_t         start_task_h;
 static const osThreadAttr_t start_task_attributes = {
@@ -65,11 +69,8 @@ static const osThreadAttr_t start_task_attributes = {
     .priority   = (osPriority_t)osPriorityNormal,
 };
 
-void start_task(void *argument) {
-    UNUSED(argument);
-
+static void init_lcd(void) {
     // BSP LCD
-    BSP_LCD_Init();
     BSP_LCD_LayerDefaultInit(1, LCD_FB_START_ADDRESS);
     BSP_LCD_SelectLayer(1);
     BSP_LCD_DisplayOn();
@@ -77,8 +78,19 @@ void start_task(void *argument) {
     // Configure LCD
     BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
     BSP_LCD_SetFont(&jetbrains_mono_thin);
+}
 
+void start_task(void *argument) {
+    UNUSED(argument);
+
+    // Init LCD screen
+    init_lcd();
+
+    // Init logging
     log_init();
+
+    // Init doomgeneric porting framework
+    doomgeneric_init();
 
     // Finished initializing all applications, exit this thread
     osThreadExit();
@@ -114,13 +126,13 @@ int main(void) {
     MX_CRC_Init();
     MX_DCMI_Init();
     MX_DMA2D_Init();
-    MX_ETH_Init();
+    // MX_ETH_Init();
     MX_FMC_Init();
     MX_I2C1_Init();
     MX_I2C3_Init();
     MX_RTC_Init();
     MX_SAI2_Init();
-    // MX_SDMMC1_SD_Init();
+    MX_SDMMC1_SD_Init();
     MX_SPDIFRX_Init();
     MX_SPI2_Init();
     MX_TIM1_Init();
@@ -133,6 +145,7 @@ int main(void) {
     MX_USART6_UART_Init();
     MX_USB_OTG_FS_USB_Init();
     MX_USB_OTG_HS_PCD_Init();
+    BSP_LCD_Init();
 
     /* Init scheduler */
     osKernelInitialize(); /* Call init function for freertos objects (in cmsis_os2.c) */

@@ -31,6 +31,23 @@
             ]
         },
         {
+            "label": "Build: Release",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "CMake: Release"
+            ],
+            "command": "ninja",
+            "args": [
+                "doom_port",
+                "-C",
+                "${workspaceFolder}/build/Release"
+            ]
+        },
+        {
             "label": "Build: Bootloader",
             "type": "shell",
             "group": {
@@ -89,6 +106,20 @@
                 "-DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE",
                 "-S", "${workspaceFolder}",
                 "-B", "${workspaceFolder}/build/Debug",
+                "-G", "Ninja"
+            ]
+        },
+        {
+            "label": "CMake: Release",
+            "type": "shell",
+            "hide": true,
+            "command": "/usr/bin/cmake",
+            "args": [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_TOOLCHAIN_FILE=${workspaceFolder}/cmake/gcc-arm-none-eabi.cmake",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE",
+                "-S", "${workspaceFolder}",
+                "-B", "${workspaceFolder}/build/Release",
                 "-G", "Ninja"
             ]
         },

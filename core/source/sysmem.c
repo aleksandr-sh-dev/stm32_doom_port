@@ -25,6 +25,9 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#include "config.h"
+
+#ifndef USE_SDRAM_MEMORY
 /**
  * Pointer to the current high watermark of the heap usage
  */
@@ -76,9 +79,30 @@ void *_sbrk(ptrdiff_t incr) {
     return (void *)prev_heap_end;
 }
 
+#else
+
+#define SDRAM_HEAP_SIZE (8 * 1024 * 1024) // 8 MB
+uint8_t sdram_heap[SDRAM_HEAP_SIZE] __attribute__((section(".sdram_data")));
+
+void *_sbrk(ptrdiff_t incr) {
+    static uint8_t *heap_end      = sdram_heap;
+    uint8_t        *prev_heap_end = heap_end;
+
+    /* Protect heap from overflowing our 8MB SDRAM buffer */
+    if(heap_end + incr > sdram_heap + SDRAM_HEAP_SIZE) {
+        errno = ENOMEM;
+        return (void *)-1;
+    }
+
+    heap_end += incr;
+    return (void *)prev_heap_end;
+}
+
 #if defined(__PICOLIBC__)
 // Picolibc expects syscalls without the leading underscore.
 // This creates a strong alias so that
 // calls to `sbrk()` are resolved to our `_sbrk()` implementation.
 __strong_reference(_sbrk, sbrk);
 #endif
+
+#endif // USE_SDRAM_MEMORY
