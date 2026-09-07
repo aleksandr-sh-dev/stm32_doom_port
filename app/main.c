@@ -28,7 +28,6 @@
 #include "quadspi.h"
 #include "rtc.h"
 #include "sai.h"
-#include "sdmmc.h"
 #include "spdifrx.h"
 #include "spi.h"
 #include "tim.h"
@@ -74,25 +73,14 @@ static const osThreadAttr_t start_task_attributes = {
     .priority   = (osPriority_t)osPriorityNormal,
 };
 
-static void init_lcd(void) {
-    // BSP LCD
-    BSP_LCD_LayerDefaultInit(1, LCD_FB_START_ADDRESS);
-    BSP_LCD_SelectLayer(1);
-    BSP_LCD_DisplayOn();
-
-    // Configure LCD
-    BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
-    BSP_LCD_SetFont(&jetbrains_mono_thin);
-}
-
 void start_task(void *argument) {
     UNUSED(argument);
 
-    // Init LCD screen
-    init_lcd();
-
     // Init logging
     log_init();
+
+    // Init FatFS
+    MX_FATFS_Init();
 
     // Check that SD card is present
     if(BSP_SD_IsDetected() == SD_NOT_PRESENT) {
@@ -120,13 +108,16 @@ int main(void) {
     /* Enable I-Cache---------------------------------------------------------*/
     SCB_EnableICache();
 
-    /* Enable D-Cache---------------------------------------------------------*/
-    SCB_EnableDCache();
+    /* Enable D-Cache------------
+    ---------------------------------------------*/
+    // SCB_EnableDCache();
 
     /* MCU Configuration--------------------------------------------------------*/
 
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     HAL_Init();
+
+    __HAL_DBGMCU_FREEZE_TIM6();
 
     /* Configure the system clock */
     SystemClock_Config();
@@ -156,10 +147,9 @@ int main(void) {
     MX_USART6_UART_Init();
     MX_USB_OTG_FS_USB_Init();
     MX_USB_OTG_HS_PCD_Init();
-    MX_FATFS_Init();
 
     // BSP
-    BSP_LCD_Init();
+    BSP_SDRAM_Init();
 
     /* Init scheduler */
     osKernelInitialize(); /* Call init function for freertos objects (in cmsis_os2.c) */
@@ -270,8 +260,9 @@ void MPU_Config(void) {
     /* Disables the MPU */
     HAL_MPU_Disable();
 
-    /** Initializes and configures the Region and the memory to be protected
-     */
+    /* ========================================================= */
+    /* REGION 0 & 1: QSPI Flash Config (0x90000000)*/
+    /* ========================================================= */
     MPU_InitStruct.Enable           = MPU_REGION_ENABLE;
     MPU_InitStruct.Number           = MPU_REGION_NUMBER0;
     MPU_InitStruct.BaseAddress      = 0x90000000;
@@ -283,17 +274,30 @@ void MPU_Config(void) {
     MPU_InitStruct.IsShareable      = MPU_ACCESS_NOT_SHAREABLE;
     MPU_InitStruct.IsCacheable      = MPU_ACCESS_CACHEABLE;
     MPU_InitStruct.IsBufferable     = MPU_ACCESS_BUFFERABLE;
-
     HAL_MPU_ConfigRegion(&MPU_InitStruct);
 
-    /** Initializes and configures the Region and the memory to be protected
-     */
     MPU_InitStruct.Number           = MPU_REGION_NUMBER1;
     MPU_InitStruct.Size             = MPU_REGION_SIZE_1MB;
     MPU_InitStruct.SubRegionDisable = 0x0;
     MPU_InitStruct.DisableExec      = MPU_INSTRUCTION_ACCESS_ENABLE;
-
     HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+    /* ========================================================= */
+    /* REGION 2: SDRAM Config (0xC0000000)                   */
+    /* ========================================================= */
+    MPU_InitStruct.Enable           = MPU_REGION_ENABLE;
+    MPU_InitStruct.Number           = MPU_REGION_NUMBER2;
+    MPU_InitStruct.BaseAddress      = 0xC0000000;
+    MPU_InitStruct.Size             = MPU_REGION_SIZE_16MB; // Matches your 16MB chip
+    MPU_InitStruct.SubRegionDisable = 0x0;
+    MPU_InitStruct.TypeExtField     = MPU_TEX_LEVEL0;
+    MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+    MPU_InitStruct.DisableExec      = MPU_INSTRUCTION_ACCESS_ENABLE;
+    MPU_InitStruct.IsShareable      = MPU_ACCESS_NOT_SHAREABLE;
+    MPU_InitStruct.IsCacheable      = MPU_ACCESS_CACHEABLE;
+    MPU_InitStruct.IsBufferable     = MPU_ACCESS_BUFFERABLE;
+    HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
     /* Enables the MPU */
     HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 }

@@ -1,5 +1,11 @@
 #include <stdint.h>
 
+// HAL
+#include "stm32f7xx_hal.h"
+#include "stm32f7xx_hal_dma2d.h"
+#include "stm32f7xx_hal_ltdc.h"
+#include "stm32f7508_discovery_lcd.h"
+
 // FreeRTOS
 #include "FreeRTOS.h"
 
@@ -10,6 +16,7 @@
 #include "log.h"
 
 #include "utils.h"
+#include "fatfs.h"
 
 // Doomgeneric lib
 #include "doomkeys.h"
@@ -18,12 +25,21 @@
 #include "i_system.h"
 #include "z_zone.h"
 
+#define BITS_PER_PIXEL (32)
+
+static const char *TAG = "DOOM_GENERIC";
+
 static osThreadId_t         doomgeneric_task_h;
 static const osThreadAttr_t doomgeneric_task_attributes = {
     .name       = "doomgeneric_task",
-    .stack_size = 1024 * 4,
+    .stack_size = 2048 * 4,
     .priority   = (osPriority_t)osPriorityAboveNormal,
 };
+
+static uint8_t     *fbPtr;
+static unsigned int fbWidth, fbHeight, fbStride, fbBytesPerPixel, fbOffsetX, fbOffsetY;
+
+extern pixel_t *DG_ScreenBuffer;
 
 static bool check_input_devs(void) {
     return true;
@@ -38,6 +54,19 @@ void DG_SetWindowTitle(const char *title) {
 }
 
 void DG_DrawFrame(void) {
+    uint32_t lcd_width  = DOOMGENERIC_RESX;
+    uint32_t lcd_height = DOOMGENERIC_RESY;
+
+    // Centering offset
+    uint32_t x_offset = (lcd_width - DOOMGENERIC_RESX) / 2;
+    uint32_t y_offset = (lcd_height - DOOMGENERIC_RESY) / 2;
+
+    // Destination start address
+    uint32_t *pDst = (uint32_t *)fbPtr + (y_offset * lcd_width) + x_offset;
+
+    // Clean D-Cache here if enabled
+
+    BSP_DrawFrame(DG_ScreenBuffer, pDst, DOOMGENERIC_RESX, DOOMGENERIC_RESY);
 }
 
 int DG_GetKey(int *pressed, uint8_t *doom_key) {
@@ -56,15 +85,42 @@ void DG_Init(void) {
     if(!check_input_devs()) {
         return;
     }
+
+    // BSP LCD
+    BSP_LCD_Init();
+    BSP_LCD_LayerDefaultInit(0, LCD_FB_START_ADDRESS);
+    BSP_LCD_DisplayOn();
+    BSP_LCD_SelectLayer(0);
+    BSP_LCD_Clear(LCD_COLOR_BLACK);
+    
+    __HAL_RCC_DMA2D_CLK_ENABLE();
+    
+    // fbPtr points to LCD framebuffer memory
+    fbPtr = (void *)LCD_FB_START_ADDRESS;
 }
 
 void doomgeneric_task(void *arg) {
     // unused
     (void)arg;
 
-    LOG_SCREEN_INFO("Creating DOOM Generic\n");
+    LOG_DEBUG(TAG, "Creating DOOM Generic");
 
-    doomgeneric_Create(0, NULL);
+    FRESULT res = f_mount(&SDFatFS, (TCHAR const *)SDPath, 0);
+    if(res != FR_OK) {
+        LOG_ERROR(TAG, "Failed to mount filesystem: %d", res);
+        configASSERT(0);
+    }
+
+    res = f_open(&SDFile, "doom1.wad", FA_READ);
+    if(res != FR_OK) {
+        LOG_ERROR(TAG, "Failed to read DOOM file");
+        configASSERT(0);
+    }
+
+    f_close(&SDFile);
+
+    char *doom_args[] = {"doom", "-mb", "4"};
+    doomgeneric_Create(3, doom_args);
 
     while(1) {
         doomgeneric_Tick();
@@ -75,4 +131,5 @@ void doomgeneric_task(void *arg) {
 
 void doomgeneric_init(void) {
     doomgeneric_task_h = osThreadNew(doomgeneric_task, NULL, &doomgeneric_task_attributes);
+    configASSERT(doomgeneric_task_h != NULL);
 }

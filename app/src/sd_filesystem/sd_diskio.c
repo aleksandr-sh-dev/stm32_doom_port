@@ -31,6 +31,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "config.h"
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 
