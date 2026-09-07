@@ -81,12 +81,19 @@ void *_sbrk(ptrdiff_t incr) {
 
 #else
 
-#define SDRAM_HEAP_SIZE (8 * 1024 * 1024) // 8 MB
+#define SDRAM_HEAP_SIZE (6 * 1024 * 1024) // 8 MB
 uint8_t sdram_heap[SDRAM_HEAP_SIZE] __attribute__((section(".sdram_data")));
 
 void *_sbrk(ptrdiff_t incr) {
-    static uint8_t *heap_end      = sdram_heap;
-    uint8_t        *prev_heap_end = heap_end;
+    static uint8_t *heap_end = sdram_heap;
+    uint8_t        *prev_heap_end;
+
+    /* Force the current heap pointer to align to an 8-byte boundary */
+    uintptr_t current_heap = (uintptr_t)heap_end;
+    current_heap           = (current_heap + 7) & ~7;
+    heap_end               = (uint8_t *)current_heap;
+
+    prev_heap_end = heap_end;
 
     /* Protect heap from overflowing our 8MB SDRAM buffer */
     if(heap_end + incr > sdram_heap + SDRAM_HEAP_SIZE) {

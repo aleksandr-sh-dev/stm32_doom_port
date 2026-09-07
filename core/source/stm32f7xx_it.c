@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f7xx_it.h"
+#include "stm32f7508_discovery_sd.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -58,6 +59,7 @@
 extern DMA2D_HandleTypeDef hdma2d;
 extern LTDC_HandleTypeDef  hltdc;
 extern TIM_HandleTypeDef   htim6;
+extern SD_HandleTypeDef    uSdHandle;
 
 /* USER CODE BEGIN EV */
 
@@ -151,6 +153,19 @@ void DebugMon_Handler(void) {
 /******************************************************************************/
 
 /**
+ * @brief This function handles SDMMC1 global interrupt.
+ */
+void BSP_SDMMC_IRQHandler(void) {
+    /* USER CODE BEGIN SDMMC1_IRQn 0 */
+
+    /* USER CODE END SDMMC1_IRQn 0 */
+    HAL_SD_IRQHandler(&uSdHandle);
+    /* USER CODE BEGIN SDMMC1_IRQn 1 */
+
+    /* USER CODE END SDMMC1_IRQn 1 */
+}
+
+/**
  * @brief This function handles TIM6 global interrupt, DAC1 and DAC2 underrun error interrupts.
  */
 void TIM6_DAC_IRQHandler(void) {
@@ -161,6 +176,24 @@ void TIM6_DAC_IRQHandler(void) {
     /* USER CODE BEGIN TIM6_DAC_IRQn 1 */
 
     /* USER CODE END TIM6_DAC_IRQn 1 */
+}
+
+/**
+ * @brief  This function handles DMA2 Stream 6 interrupt request.
+ * @param  None
+ * @retval None
+ */
+void BSP_SDMMC_DMA_Tx_IRQHandler(void) {
+    HAL_DMA_IRQHandler(uSdHandle.hdmatx);
+}
+
+/**
+ * @brief  This function handles DMA2 Stream 3 interrupt request.
+ * @param  None
+ * @retval None
+ */
+void BSP_SDMMC_DMA_Rx_IRQHandler(void) {
+    HAL_DMA_IRQHandler(uSdHandle.hdmarx);
 }
 
 /**
