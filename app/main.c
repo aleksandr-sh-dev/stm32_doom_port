@@ -53,6 +53,7 @@
 #include "log.h"
 #include "fatfs.h"
 #include "doomgeneric_stm32.h"
+#include "buttons.h"
 
 /* Private function prototypes -----------------------------------------------*/
 void        SystemClock_Config(void);
@@ -78,6 +79,12 @@ void start_task(void *argument) {
 
     // Init logging
     log_init();
+
+    // Init buttons
+    buttons_init();
+    
+    // Start TIM8 for buttons check
+    HAL_TIM_Base_Start_IT(&htim8);
 
     // Init FatFS
     MX_FATFS_Init();
@@ -127,7 +134,6 @@ int main(void) {
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
     MX_CRC_Init();
-    MX_DCMI_Init();
     MX_DMA2D_Init();
     MX_FMC_Init();
     MX_I2C1_Init();
@@ -135,11 +141,9 @@ int main(void) {
     MX_RTC_Init();
     MX_SAI2_Init();
     MX_SPDIFRX_Init();
-    MX_SPI2_Init();
     MX_TIM1_Init();
     MX_TIM2_Init();
     MX_TIM3_Init();
-    MX_TIM5_Init();
     MX_TIM8_Init();
     MX_TIM12_Init();
     MX_USART1_UART_Init();
@@ -317,6 +321,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     /* USER CODE END Callback 0 */
     if(htim->Instance == TIM6) {
         HAL_IncTick();
+    } else if(htim->Instance == TIM8) {
+        buttons_check();
     }
     /* USER CODE BEGIN Callback 1 */
 

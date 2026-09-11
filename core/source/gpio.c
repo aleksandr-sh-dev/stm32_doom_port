@@ -62,9 +62,6 @@ void MX_GPIO_Init(void) {
     HAL_GPIO_WritePin(OTG_FS_PowerSwitchOn_GPIO_Port, OTG_FS_PowerSwitchOn_Pin, GPIO_PIN_SET);
 
     /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(GPIOI, ARDUINO_D7_Pin | ARDUINO_D8_Pin, GPIO_PIN_RESET);
-
-    /*Configure GPIO pin Output Level */
     HAL_GPIO_WritePin(LCD_BL_CTRL_GPIO_Port, LCD_BL_CTRL_Pin, GPIO_PIN_SET);
 
     /*Configure GPIO pin Output Level */
@@ -74,7 +71,7 @@ void MX_GPIO_Init(void) {
     HAL_GPIO_WritePin(DCMI_PWR_EN_GPIO_Port, DCMI_PWR_EN_Pin, GPIO_PIN_RESET);
 
     /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(GPIOG, ARDUINO_D4_Pin | ARDUINO_D2_Pin | EXT_RST_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOG, EXT_RST_Pin, GPIO_PIN_RESET);
 
     /*Configure GPIO pin : OTG_HS_OverCurrent_Pin */
     GPIO_InitStruct.Pin  = OTG_HS_OverCurrent_Pin;
@@ -110,7 +107,7 @@ void MX_GPIO_Init(void) {
     HAL_GPIO_Init(OTG_FS_PowerSwitchOn_GPIO_Port, &GPIO_InitStruct);
 
     /*Configure GPIO pins : ARDUINO_D7_Pin ARDUINO_D8_Pin LCD_DISP_Pin */
-    GPIO_InitStruct.Pin   = ARDUINO_D7_Pin | ARDUINO_D8_Pin | LCD_DISP_Pin;
+    GPIO_InitStruct.Pin   = LCD_DISP_Pin;
     GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull  = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -135,12 +132,6 @@ void MX_GPIO_Init(void) {
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(OTG_FS_OverCurrent_GPIO_Port, &GPIO_InitStruct);
 
-    /*Configure GPIO pins : TP3_Pin NC2_Pin */
-    GPIO_InitStruct.Pin  = TP3_Pin | NC2_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
-
     /*Configure GPIO pin : DCMI_PWR_EN_Pin */
     GPIO_InitStruct.Pin   = DCMI_PWR_EN_Pin;
     GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
@@ -155,7 +146,7 @@ void MX_GPIO_Init(void) {
     HAL_GPIO_Init(LCD_INT_GPIO_Port, &GPIO_InitStruct);
 
     /*Configure GPIO pins : ARDUINO_D4_Pin ARDUINO_D2_Pin EXT_RST_Pin */
-    GPIO_InitStruct.Pin   = ARDUINO_D4_Pin | ARDUINO_D2_Pin | EXT_RST_Pin;
+    GPIO_InitStruct.Pin   = EXT_RST_Pin;
     GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull  = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
