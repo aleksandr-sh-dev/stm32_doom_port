@@ -2,7 +2,7 @@
 
 #include "stm32f7508_discovery_lcd.h"
 
-#define DOOMGENERIC_RESX (RK043FN48H_WIDTH)
-#define DOOMGENERIC_RESY (RK043FN48H_HEIGHT)
+#define DOOMGENERIC_RESX (320)
+#define DOOMGENERIC_RESY (200)
 
 void doomgeneric_init(void);

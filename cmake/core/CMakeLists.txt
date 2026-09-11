@@ -38,7 +38,6 @@ set(MX_Application_Src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/quadspi.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/rtc.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/sai.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/sdmmc.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/spdifrx.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/spi.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/tim.c

@@ -24,10 +24,14 @@
         lwprintf_printf("%s[%s] %s: " fmt "%s\r\n", color, level_str, tag, ##__VA_ARGS__, LOG_COLOR_RESET); \
     } while(0)
 
+#if(LOG_MODE & SCREEN_LOGGING)
 #define LOG_SCREEN_INFO(fmt, ...)              \
     do {                                       \
         LCD_UsrLog(fmt "\r\n", ##__VA_ARGS__); \
     } while(0)
+#else
+#define LOG_SCREEN_INFO(fmt, ...)
+#endif
 
 #if LOG_ACTIVE_LEVEL <= LOG_LEVEL_DEBUG
 #define LOG_DEBUG(tag, fmt, ...) LOG_PRINT_CORE(LOG_COLOR_MAGENTA, "D", tag, fmt, ##__VA_ARGS__)
