@@ -37,10 +37,10 @@ static const osThreadAttr_t doomgeneric_task_attributes = {
     .priority   = (osPriority_t)osPriorityAboveNormal,
 };
 
+extern struct color colors[256];
+static uint32_t     dma2d_clut[256];
 static uint8_t     *fbPtr;
-static unsigned int fbWidth, fbHeight, fbStride, fbBytesPerPixel, fbOffsetX, fbOffsetY;
-
-extern pixel_t *DG_ScreenBuffer;
+extern pixel_t     *DG_ScreenBuffer;
 
 static bool check_input_devs(void) {
     return true;
@@ -54,28 +54,43 @@ void DG_SetWindowTitle(const char *title) {
     (void)title;
 }
 
-extern struct color colors[256];
-uint32_t            dma2d_clut[256];
+/* Global pointer for the 130 KB scaled frame */
+__SDRAM_MEMORY__ static uint8_t stretched_buffer[480 * 272];
+
+/* Fast pre-computed lookup tables */
+static uint16_t x_lut[480];
+static uint16_t y_lut[272];
+static bool lut_init = false;
+
+static void stretch_frame_8bit(uint8_t* src, uint8_t* dst) {
+    if (!lut_init) {
+        for (int x = 0; x < 480; x++) {
+            x_lut[x] = (x * 320) / 480;
+        }
+        for (int y = 0; y < 272; y++) {
+            y_lut[y] = ((y * 200) / 272) * 320; 
+        }
+        lut_init = true;
+    }
+
+    for (int y = 0; y < 272; y++) {
+        uint8_t* src_row = src + y_lut[y];
+        uint8_t* dst_row = dst + (y * 480);
+        
+        for (int x = 0; x < 480; x++) {
+            dst_row[x] = src_row[x_lut[x]];
+        }
+    }
+}
 
 void DG_DrawFrame(void) {
+    stretch_frame_8bit((uint8_t *)DG_ScreenBuffer, stretched_buffer);
+
     for(int i = 0; i < 256; i++) {
         dma2d_clut[i] = (0xFF << 24) | (colors[i].r << 16) | (colors[i].g << 8) | colors[i].b;
     }
 
-    // LCD resolution
-    uint32_t lcd_width  = 480;
-    uint32_t lcd_height = 272;
-
-    // (480 - 320) / 2 = 80 pixels padding on the left/right
-    uint32_t x_offset = (lcd_width - DOOMGENERIC_RESX) / 2;
-
-    // (272 - 200) / 2 = 36 pixels padding on the top/bottom
-    uint32_t y_offset = (lcd_height - DOOMGENERIC_RESY) / 2;
-
-    // Skip 36 rows of 480 pixels, then shift right by 80 pixels
-    uint32_t *pDst = (uint32_t *)fbPtr + (y_offset * lcd_width) + x_offset;
-
-    BSP_DrawFrame(DG_ScreenBuffer, pDst, DOOMGENERIC_RESX, DOOMGENERIC_RESY, dma2d_clut);
+    BSP_DrawFrame(stretched_buffer, fbPtr, 480, 272, dma2d_clut);
 }
 
 int DG_GetKey(int *pressed, uint8_t *doom_key) {
