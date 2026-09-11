@@ -30,6 +30,15 @@
 #include <sys/time.h>
 #include <sys/times.h>
 
+#include "ff.h"
+#include <errno.h>
+#include <sys/unistd.h>
+#include <fcntl.h>
+
+#define MAX_OPEN_FILES 4
+static FIL fatfs_files[MAX_OPEN_FILES];
+static int fatfs_file_in_use[MAX_OPEN_FILES] = {0};
+
 /* Variables */
 extern int __io_putchar(int ch) __attribute__((weak));
 extern int __io_getchar(void) __attribute__((weak));
@@ -58,55 +67,146 @@ void _exit(int status) {
     } /* Make sure we hang here */
 }
 
-__attribute__((weak)) int _read(int file, char *ptr, int len) {
-    (void)file;
-    int DataIdx;
+// __attribute__((weak)) int _read(int file, char *ptr, int len) {
+//     (void)file;
+//     int DataIdx;
 
-    for(DataIdx = 0; DataIdx < len; DataIdx++) {
-        *ptr++ = __io_getchar();
+//     for(DataIdx = 0; DataIdx < len; DataIdx++) {
+//         *ptr++ = __io_getchar();
+//     }
+
+//     return len;
+// }
+
+// __attribute__((weak)) int _write(int file, char *ptr, int len) {
+//     (void)file;
+//     int DataIdx;
+
+//     for(DataIdx = 0; DataIdx < len; DataIdx++) {
+//         __io_putchar(*ptr++);
+//     }
+//     return len;
+// }
+
+int _read(int fd, char *ptr, int len) {
+    if(fd >= 3 && fd < 3 + MAX_OPEN_FILES && fatfs_file_in_use[fd - 3]) {
+        UINT bytes_read;
+        if(f_read(&fatfs_files[fd - 3], ptr, len, &bytes_read) == FR_OK) {
+            return bytes_read;
+        }
     }
 
-    return len;
-}
-
-__attribute__((weak)) int _write(int file, char *ptr, int len) {
-    (void)file;
-    int DataIdx;
-
-    for(DataIdx = 0; DataIdx < len; DataIdx++) {
-        __io_putchar(*ptr++);
-    }
-    return len;
-}
-
-int _close(int file) {
-    (void)file;
+    errno = EBADF;
     return -1;
 }
 
-int _fstat(int file, struct stat *st) {
-    (void)file;
-    st->st_mode = S_IFCHR;
-    return 0;
+int _write(int fd, char *ptr, int len) {
+    // If outputting to stdout/stderr (e.g. printf), route it through your logger instead
+    if(fd == 1 || fd == 2) {
+        extern void lwprintf_printf(const char *format, ...);
+        return len;
+    }
+
+    if(fd >= 3 && fd < 3 + MAX_OPEN_FILES && fatfs_file_in_use[fd - 3]) {
+        UINT bytes_written;
+        if(f_write(&fatfs_files[fd - 3], ptr, len, &bytes_written) == FR_OK) {
+            return bytes_written;
+        }
+    }
+
+    errno = EBADF;
+    return -1;
 }
 
-int _isatty(int file) {
-    (void)file;
-    return 1;
+int _close(int fd) {
+    if(fd >= 3 && fd < 3 + MAX_OPEN_FILES && fatfs_file_in_use[fd - 3]) {
+        f_close(&fatfs_files[fd - 3]);
+        fatfs_file_in_use[fd - 3] = 0;
+        return 0;
+    }
+
+    errno = EBADF;
+    return -1;
 }
 
-int _lseek(int file, int ptr, int dir) {
-    (void)file;
-    (void)ptr;
-    (void)dir;
-    return 0;
+int _fstat(int fd, struct stat *st) {
+    if(fd >= 3 && fd < 3 + MAX_OPEN_FILES && fatfs_file_in_use[fd - 3]) {
+        st->st_mode = S_IFREG;
+        st->st_size = f_size(&fatfs_files[fd - 3]);
+        return 0;
+    }
+
+    errno = EBADF;
+    return -1;
+}
+
+int _isatty(int fd) {
+    if(fd >= 0 && fd <= 2)
+        return 1; // 0, 1, 2 are terminals
+    return 0;     // Everything else is a file
+}
+
+off_t _lseek(int fd, off_t ptr, int dir) {
+    if(fd >= 3 && fd < 3 + MAX_OPEN_FILES && fatfs_file_in_use[fd - 3]) {
+        FIL    *fil = &fatfs_files[fd - 3];
+        FRESULT res;
+
+        if(dir == SEEK_SET) {
+            res = f_lseek(fil, ptr);
+        } else if(dir == SEEK_CUR) {
+            res = f_lseek(fil, f_tell(fil) + ptr);
+        } else if(dir == SEEK_END) {
+            res = f_lseek(fil, f_size(fil) + ptr);
+        } else {
+            errno = EINVAL;
+            return -1;
+        }
+
+        if(res == FR_OK)
+            return f_tell(fil);
+    }
+
+    errno = EBADF;
+    return -1;
 }
 
 int _open(char *path, int flags, ...) {
-    (void)path;
-    (void)flags;
-    /* Pretend like we always fail */
-    return -1;
+    int fd = -1;
+
+    for(uint8_t i = 0; i < MAX_OPEN_FILES; i++) {
+        if(!fatfs_file_in_use[i]) {
+            fd = i;
+            break;
+        }
+    }
+
+    if(fd == -1) {
+        errno = ENFILE;
+        return -1;
+    }
+
+    BYTE fa = FA_READ;
+
+    if((flags & O_ACCMODE) == O_WRONLY) {
+        fa = FA_WRITE | FA_CREATE_ALWAYS;
+    } else if((flags & O_ACCMODE) == O_RDWR) {
+        fa = FA_READ | FA_WRITE | FA_OPEN_ALWAYS;
+    }
+
+    // FatFS prefers paths without leading slashes (e.g. "doom1.wad" instead of "/doom1.wad")
+    if(path[0] == '/') {
+        path++;
+    }
+
+    if(f_open(&fatfs_files[fd], path, fa) != FR_OK) {
+        errno = ENOENT;
+        return -1;
+    }
+
+    fatfs_file_in_use[fd] = 1;
+
+    // Return FD offset by 3 (0, 1, 2 are reserved for stdin, stdout, stderr)
+    return fd + 3;
 }
 
 int _wait(int *status) {

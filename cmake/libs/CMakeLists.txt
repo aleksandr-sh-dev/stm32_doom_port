@@ -35,6 +35,7 @@ list(FILTER DoomGeneric_Src EXCLUDE REGEX "i_allegromusic.c")
 list(FILTER DoomGeneric_Src EXCLUDE REGEX "i_allegrosound.c")
 list(FILTER DoomGeneric_Src EXCLUDE REGEX "i_sdlmusic.c")
 list(FILTER DoomGeneric_Src EXCLUDE REGEX "i_sdlsound.c")
+# list(FILTER DoomGeneric_Src EXCLUDE REGEX "i_video.c")
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${DoomGeneric_Src})
 
