@@ -24,6 +24,7 @@
 #include "doomgeneric.h"
 #include "i_system.h"
 #include "z_zone.h"
+#include "i_video.h"
 
 #define BITS_PER_PIXEL (32)
 
@@ -53,20 +54,28 @@ void DG_SetWindowTitle(const char *title) {
     (void)title;
 }
 
-void DG_DrawFrame(void) {
-    uint32_t lcd_width  = DOOMGENERIC_RESX;
-    uint32_t lcd_height = DOOMGENERIC_RESY;
+extern struct color colors[256];
+uint32_t            dma2d_clut[256];
 
-    // Centering offset
+void DG_DrawFrame(void) {
+    for(int i = 0; i < 256; i++) {
+        dma2d_clut[i] = (0xFF << 24) | (colors[i].r << 16) | (colors[i].g << 8) | colors[i].b;
+    }
+
+    // LCD resolution
+    uint32_t lcd_width  = 480;
+    uint32_t lcd_height = 272;
+
+    // (480 - 320) / 2 = 80 pixels padding on the left/right
     uint32_t x_offset = (lcd_width - DOOMGENERIC_RESX) / 2;
+
+    // (272 - 200) / 2 = 36 pixels padding on the top/bottom
     uint32_t y_offset = (lcd_height - DOOMGENERIC_RESY) / 2;
 
-    // Destination start address
+    // Skip 36 rows of 480 pixels, then shift right by 80 pixels
     uint32_t *pDst = (uint32_t *)fbPtr + (y_offset * lcd_width) + x_offset;
 
-    // Clean D-Cache here if enabled
-
-    BSP_DrawFrame(DG_ScreenBuffer, pDst, DOOMGENERIC_RESX, DOOMGENERIC_RESY);
+    BSP_DrawFrame(DG_ScreenBuffer, pDst, DOOMGENERIC_RESX, DOOMGENERIC_RESY, dma2d_clut);
 }
 
 int DG_GetKey(int *pressed, uint8_t *doom_key) {
@@ -92,11 +101,13 @@ void DG_Init(void) {
     BSP_LCD_DisplayOn();
     BSP_LCD_SelectLayer(0);
     BSP_LCD_Clear(LCD_COLOR_BLACK);
-    
+
     __HAL_RCC_DMA2D_CLK_ENABLE();
-    
+
     // fbPtr points to LCD framebuffer memory
     fbPtr = (void *)LCD_FB_START_ADDRESS;
+
+    LOG_DEBUG(TAG, "Width: %d, Height: %d", DOOMGENERIC_RESX, DOOMGENERIC_RESY);
 }
 
 void doomgeneric_task(void *arg) {
