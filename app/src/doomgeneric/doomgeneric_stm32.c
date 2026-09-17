@@ -90,6 +90,8 @@ void DG_DrawFrame(void) {
         dma2d_clut[i] = (0xFF << 24) | (colors[i].r << 16) | (colors[i].g << 8) | colors[i].b;
     }
 
+    SCB_CleanDCache_by_Addr((uint32_t *)stretched_buffer, 480 * 272);
+
     BSP_DrawFrame(stretched_buffer, fbPtr, 480, 272, dma2d_clut);
 }
 
