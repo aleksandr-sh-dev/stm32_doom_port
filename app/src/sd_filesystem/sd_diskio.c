@@ -77,7 +77,7 @@ See BSP_SD_ErrorCallback() and BSP_SD_AbortCallback() below
  * Notice: This is applicable only for cortex M7 based platform.
  */
 /* USER CODE BEGIN enableSDDmaCacheMaintenance */
-#define ENABLE_SD_DMA_CACHE_MAINTENANCE  1
+#define ENABLE_SD_DMA_CACHE_MAINTENANCE 1
 /* USER CODE END enableSDDmaCacheMaintenance */
 
 /*
@@ -91,7 +91,7 @@ See BSP_SD_ErrorCallback() and BSP_SD_AbortCallback() below
 
 /* Private variables ---------------------------------------------------------*/
 #if defined(ENABLE_SCRATCH_BUFFER)
-#if (ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
+#if(ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
 ALIGN_32BYTES(static uint8_t scratch[BLOCKSIZE]); // 32-Byte aligned for cache maintenance
 #else
 __ALIGN_BEGIN static uint8_t scratch[BLOCKSIZE] __ALIGN_END;
@@ -262,10 +262,10 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count) {
 #if defined(ENABLE_SCRATCH_BUFFER)
     if(!((uint32_t)buff & 0x3)) {
 #endif
-#if (ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
-    alignedAddr = (uint32_t)buff & ~0x1F;
-    // Clean whole aligned buffer from data cache
-    SCB_CleanDCache_by_Addr((uint32_t*)alignedAddr, count*BLOCKSIZE + ((uint32_t)buff - alignedAddr));
+#if(ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
+        alignedAddr = (uint32_t)buff & ~0x1F;
+        // Clean whole aligned buffer from data cache
+        SCB_CleanDCache_by_Addr((uint32_t *)alignedAddr, count * BLOCKSIZE + ((uint32_t)buff - alignedAddr));
 #endif
         /* Fast path cause destination buffer is correctly aligned */
         ret = BSP_SD_ReadBlocks_DMA((uint32_t *)buff, (uint32_t)(sector), count);

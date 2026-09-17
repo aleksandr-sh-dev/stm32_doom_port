@@ -17,6 +17,7 @@
 
 #include "utils.h"
 #include "fatfs.h"
+#include "buttons.h"
 
 // Doomgeneric lib
 #include "doomkeys.h"
@@ -36,6 +37,20 @@ static const osThreadAttr_t doomgeneric_task_attributes = {
     .stack_size = 2048 * 4,
     .priority   = (osPriority_t)osPriorityAboveNormal,
 };
+
+static const uint8_t DOOM_KEY_MAP[9] = {
+    KEY_FIRE,       // Bit 0: FIRE
+    KEY_USE,        // Bit 1: ACTIVATE
+    KEY_RSHIFT,     // Bit 2: RUN
+    KEY_UPARROW,    // Bit 3: FORWARD
+    KEY_DOWNARROW,  // Bit 4: BACKWARD
+    KEY_LEFTARROW,  // Bit 5: LEFT
+    KEY_RIGHTARROW, // Bit 6: RIGHT
+    KEY_STRAFE_L,   // Bit 7: BUMPER L (was WEAPON_DOWN)
+    KEY_STRAFE_R    // Bit 8: BUMPER R (was WEAPON_UP)
+};
+
+static uint32_t previous_button_state = 0;
 
 extern struct color colors[256];
 static uint32_t     dma2d_clut[256];
@@ -60,24 +75,24 @@ __ALIGNED_32__ __SDRAM_MEMORY__ static uint8_t stretched_buffer[480 * 272];
 /* Fast pre-computed lookup tables */
 static uint16_t x_lut[480];
 static uint16_t y_lut[272];
-static bool lut_init = false;
+static bool     lut_init = false;
 
-static void stretch_frame_8bit(uint8_t* src, uint8_t* dst) {
-    if (!lut_init) {
-        for (int x = 0; x < 480; x++) {
+static void stretch_frame_8bit(uint8_t *src, uint8_t *dst) {
+    if(!lut_init) {
+        for(int x = 0; x < 480; x++) {
             x_lut[x] = (x * 320) / 480;
         }
-        for (int y = 0; y < 272; y++) {
-            y_lut[y] = ((y * 200) / 272) * 320; 
+        for(int y = 0; y < 272; y++) {
+            y_lut[y] = ((y * 200) / 272) * 320;
         }
         lut_init = true;
     }
 
-    for (int y = 0; y < 272; y++) {
-        uint8_t* src_row = src + y_lut[y];
-        uint8_t* dst_row = dst + (y * 480);
-        
-        for (int x = 0; x < 480; x++) {
+    for(int y = 0; y < 272; y++) {
+        uint8_t *src_row = src + y_lut[y];
+        uint8_t *dst_row = dst + (y * 480);
+
+        for(int x = 0; x < 480; x++) {
             dst_row[x] = src_row[x_lut[x]];
         }
     }
@@ -96,6 +111,30 @@ void DG_DrawFrame(void) {
 }
 
 int DG_GetKey(int *pressed, uint8_t *doom_key) {
+    uint32_t current_button_state = buttons_get_state();
+    
+    uint32_t changed_buttons = current_button_state ^ previous_button_state;
+
+    if (changed_buttons == 0) {
+        return 0; 
+    }
+
+    for (int i = 0; i < 9; i++) {
+        uint32_t mask = (1 << i);
+        
+        if (changed_buttons & mask) {
+            *doom_key = DOOM_KEY_MAP[i];
+            
+            // Is the button currently down (1) or up (0)?
+            *pressed = (current_button_state & mask) ? 1 : 0;
+            
+            // Toggle just this bit in previous_button_state so we don't process it again
+            previous_button_state ^= mask;
+            
+            return 1; 
+        }
+    }
+
     return 0;
 }
 

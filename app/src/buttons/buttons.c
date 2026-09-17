@@ -14,23 +14,23 @@ void buttons_check(void) {
 
     // Read all pins
     if(!HAL_GPIO_ReadPin(FIRE_GPIO_Port, FIRE_Pin))
-        current_state |= (1 << 0);
+        current_state |= FIRE_KEY;
     if(!HAL_GPIO_ReadPin(ACTIVATE_GPIO_Port, ACTIVATE_Pin))
-        current_state |= (1 << 1);
+        current_state |= ACTIVATE_KEY;
     if(!HAL_GPIO_ReadPin(RUN_GPIO_Port, RUN_Pin))
-        current_state |= (1 << 2);
+        current_state |= RUN_KEY;
     if(!HAL_GPIO_ReadPin(FORWARD_GPIO_Port, FORWARD_Pin))
-        current_state |= (1 << 3);
+        current_state |= FORWARD_KEY;
     if(!HAL_GPIO_ReadPin(BACKWARD_GPIO_Port, BACKWARD_Pin))
-        current_state |= (1 << 4);
+        current_state |= BACKWARD_KEY;
     if(!HAL_GPIO_ReadPin(LEFT_GPIO_Port, LEFT_Pin))
-        current_state |= (1 << 5);
+        current_state |= LEFT_KEY;
     if(!HAL_GPIO_ReadPin(RIGHT_GPIO_Port, RIGHT_Pin))
-        current_state |= (1 << 6);
+        current_state |= RIGHT_KEY;
     if(!HAL_GPIO_ReadPin(WEAPON_DOWN_GPIO_Port, WEAPON_DOWN_Pin))
-        current_state |= (1 << 7);
+        current_state |= WEAPON_DOWN_KEY;
     if(!HAL_GPIO_ReadPin(WEAPON_UP_GPIO_Port, WEAPON_UP_Pin))
-        current_state |= (1 << 8);
+        current_state |= WEAPON_UP_KEY;
 
     // Update the global state
     gamepad_state = current_state;
