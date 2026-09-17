@@ -55,7 +55,7 @@ void DG_SetWindowTitle(const char *title) {
 }
 
 /* Global pointer for the 130 KB scaled frame */
-__SDRAM_MEMORY__ static uint8_t stretched_buffer[480 * 272];
+__ALIGNED_32__ __SDRAM_MEMORY__ static uint8_t stretched_buffer[480 * 272];
 
 /* Fast pre-computed lookup tables */
 static uint16_t x_lut[480];
