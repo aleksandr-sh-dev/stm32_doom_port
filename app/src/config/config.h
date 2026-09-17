@@ -6,7 +6,7 @@
 #define UART_LOGGING   (1 << 1)
 
 // SD and FatFS
-#define ENABLE_SD_DMA_CACHE_MAINTENANCE (0)
+#define ENABLE_SD_DMA_CACHE_MAINTENANCE (1)
 
 // LOGGING
 #define LOG_MODE         (UART_LOGGING)

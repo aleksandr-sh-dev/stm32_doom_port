@@ -55,7 +55,7 @@ void DG_SetWindowTitle(const char *title) {
 }
 
 /* Global pointer for the 130 KB scaled frame */
-__SDRAM_MEMORY__ static uint8_t stretched_buffer[480 * 272];
+__ALIGNED_32__ __SDRAM_MEMORY__ static uint8_t stretched_buffer[480 * 272];
 
 /* Fast pre-computed lookup tables */
 static uint16_t x_lut[480];
@@ -89,6 +89,8 @@ void DG_DrawFrame(void) {
     for(int i = 0; i < 256; i++) {
         dma2d_clut[i] = (0xFF << 24) | (colors[i].r << 16) | (colors[i].g << 8) | colors[i].b;
     }
+
+    SCB_CleanDCache_by_Addr((uint32_t *)stretched_buffer, 480 * 272);
 
     BSP_DrawFrame(stretched_buffer, fbPtr, 480, 272, dma2d_clut);
 }

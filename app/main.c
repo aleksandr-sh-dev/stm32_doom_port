@@ -108,9 +108,8 @@ int main(void) {
     /* Enable I-Cache---------------------------------------------------------*/
     SCB_EnableICache();
 
-    /* Enable D-Cache------------
-    ---------------------------------------------*/
-    // SCB_EnableDCache();
+    /* Enable D-Cache---------------------------------------------------------*/
+    SCB_EnableDCache();
 
     /* MCU Configuration--------------------------------------------------------*/
 
@@ -282,6 +281,7 @@ void MPU_Config(void) {
     MPU_InitStruct.DisableExec      = MPU_INSTRUCTION_ACCESS_ENABLE;
     HAL_MPU_ConfigRegion(&MPU_InitStruct);
 
+#ifdef USE_SDRAM_MEMORY
     /* ========================================================= */
     /* REGION 2: SDRAM Config (0xC0000000)                   */
     /* ========================================================= */
@@ -297,6 +297,7 @@ void MPU_Config(void) {
     MPU_InitStruct.IsCacheable      = MPU_ACCESS_CACHEABLE;
     MPU_InitStruct.IsBufferable     = MPU_ACCESS_BUFFERABLE;
     HAL_MPU_ConfigRegion(&MPU_InitStruct);
+#endif // USE_SDRAM_MEMORY
 
     /* Enables the MPU */
     HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
