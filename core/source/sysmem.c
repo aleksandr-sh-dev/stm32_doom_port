@@ -81,7 +81,7 @@ void *_sbrk(ptrdiff_t incr) {
 
 #else
 
-#define SDRAM_HEAP_SIZE (6 * 1024 * 1024) // 8 MB
+#define SDRAM_HEAP_SIZE (6 * 1024 * 1024) // 6 MB
 uint8_t sdram_heap[SDRAM_HEAP_SIZE] __attribute__((section(".sdram_data")));
 
 void *_sbrk(ptrdiff_t incr) {
