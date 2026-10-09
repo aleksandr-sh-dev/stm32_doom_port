@@ -58,3 +58,6 @@ build_bootloader/
 
 # Binaries
 *.bin
+
+# Gamefile
+*.wad

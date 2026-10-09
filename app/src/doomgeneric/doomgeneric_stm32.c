@@ -41,7 +41,7 @@ static const osThreadAttr_t doomgeneric_task_attributes = {
 static const uint8_t DOOM_KEY_MAP[9] = {
     KEY_FIRE,       // Bit 0: FIRE
     KEY_USE,        // Bit 1: ACTIVATE
-    KEY_RSHIFT,     // Bit 2: RUN
+    KEY_ENTER,      // Bit 2: ENTER
     KEY_UPARROW,    // Bit 3: FORWARD
     KEY_DOWNARROW,  // Bit 4: BACKWARD
     KEY_LEFTARROW,  // Bit 5: LEFT

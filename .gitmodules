@@ -33,4 +33,4 @@
 	url = git@github.com:STMicroelectronics/stm32-ov9655.git
 [submodule "libs/doomgeneric"]
 	path = libs/doomgeneric
-	url = git@github.com:ozkl/doomgeneric.git
+	url = git@github.com:aleksandr-sh-dev/doomgeneric.git
