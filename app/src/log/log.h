@@ -39,6 +39,12 @@
 #define LOG_DEBUG(tag, fmt, ...)
 #endif
 
+#if LOG_ACTIVE_LEVEL <= LOG_LEVEL_INFO
+#define LOG_INFO(tag, fmt, ...) LOG_PRINT_CORE(LOG_COLOR_WHITE, "I", tag, fmt, ##__VA_ARGS__)
+#else
+#define LOG_INFO(tag, fmt, ...)
+#endif
+
 #if LOG_ACTIVE_LEVEL <= LOG_LEVEL_WARN
 #define LOG_WARN(tag, fmt, ...) LOG_PRINT_CORE(LOG_COLOR_ORANGE, "W", tag, fmt, ##__VA_ARGS__)
 #else

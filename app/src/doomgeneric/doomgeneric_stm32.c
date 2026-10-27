@@ -18,6 +18,7 @@
 #include "utils.h"
 #include "fatfs.h"
 #include "buttons.h"
+#include "gpio.h"
 
 // Doomgeneric lib
 #include "doomkeys.h"

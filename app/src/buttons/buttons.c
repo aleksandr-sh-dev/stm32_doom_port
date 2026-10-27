@@ -1,58 +1,79 @@
-#include "gpio.h"
-
 #include "buttons.h"
+#include "log.h"
 
-volatile uint32_t gamepad_state = 0;
+typedef enum {
+    BUTTONS_OK = 0,
+    BUTTONS_ERR_NULL_PTR = 1,
+    BUTTONS_ERR_NO_BTNS = 2,
+} button_err_t;
+
+static buttons_t buttons = {
+    .bindings = NULL,
+    .state = 0,
+    .num = 0,
+};
+
+static const char* TAG = "BUTTONS";
 
 uint32_t buttons_get_state(void) {
-    return gamepad_state;
+    return buttons.state;
 }
 
 // 100Hz timer (10 ms)
 void buttons_check(void) {
     uint32_t current_state = 0;
 
-    // Read all pins
-    if(!HAL_GPIO_ReadPin(FIRE_GPIO_Port, FIRE_Pin))
-        current_state |= FIRE_KEY;
-    if(!HAL_GPIO_ReadPin(ACTIVATE_GPIO_Port, ACTIVATE_Pin))
-        current_state |= ACTIVATE_KEY;
-    if(!HAL_GPIO_ReadPin(RUN_GPIO_Port, RUN_Pin))
-        current_state |= RUN_KEY;
-    if(!HAL_GPIO_ReadPin(FORWARD_GPIO_Port, FORWARD_Pin))
-        current_state |= FORWARD_KEY;
-    if(!HAL_GPIO_ReadPin(BACKWARD_GPIO_Port, BACKWARD_Pin))
-        current_state |= BACKWARD_KEY;
-    if(!HAL_GPIO_ReadPin(LEFT_GPIO_Port, LEFT_Pin))
-        current_state |= LEFT_KEY;
-    if(!HAL_GPIO_ReadPin(RIGHT_GPIO_Port, RIGHT_Pin))
-        current_state |= RIGHT_KEY;
-    if(!HAL_GPIO_ReadPin(WEAPON_DOWN_GPIO_Port, WEAPON_DOWN_Pin))
-        current_state |= WEAPON_DOWN_KEY;
-    if(!HAL_GPIO_ReadPin(WEAPON_UP_GPIO_Port, WEAPON_UP_Pin))
-        current_state |= WEAPON_UP_KEY;
+    // Loop through your elegant array instead of hardcoding every pin!
+    for (uint8_t i = 0; i < buttons.num; i++) {
+        if (!BUTTON_READ(buttons.bindings[i].gpio_port, buttons.bindings[i].gpio_pin)) {
+            // Apply the bitmask defined in the struct
+            current_state |= buttons.bindings[i].bitmask; 
+        }
+    }
 
     // Update the global state
-    gamepad_state = current_state;
+    buttons.state = current_state;
 }
 
-void buttons_init(void) {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
+int buttons_init(const button_binding_t *bindings, uint8_t buttons_num) {
+    if (bindings == NULL) {
+        return BUTTONS_ERR_NULL_PTR;
+    }
 
-    // GPIO Clocks are enabled in MX_GPIO_Init on start
+    if (buttons_num == 0) {
+        return BUTTONS_ERR_NO_BTNS;
+    }
+
+    // Initialize bindings
+    memcpy(buttons.bindings, bindings, sizeof(button_binding_t));
+    buttons.num = buttons_num;
+
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
 
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
 
-    GPIO_InitStruct.Pin = RIGHT_Pin | WEAPON_DOWN_Pin;
-    HAL_GPIO_Init(RIGHT_GPIO_Port, &GPIO_InitStruct);
+    for (uint8_t i = 0; i < buttons.num; i++) {
+        GPIO_InitStruct.Pin = buttons.bindings[i].gpio_pin;
+        BUTTON_INIT(buttons.bindings[i].gpio_port, &GPIO_InitStruct);
+    }
 
-    GPIO_InitStruct.Pin = FIRE_Pin | FORWARD_Pin;
-    HAL_GPIO_Init(FIRE_GPIO_Port, &GPIO_InitStruct);
+    buttons.initialized = true;
 
-    GPIO_InitStruct.Pin = RUN_Pin;
-    HAL_GPIO_Init(RUN_GPIO_Port, &GPIO_InitStruct);
+    return BUTTONS_OK;
+}
 
-    GPIO_InitStruct.Pin = WEAPON_UP_Pin | ACTIVATE_Pin | LEFT_Pin | BACKWARD_Pin;
-    HAL_GPIO_Init(WEAPON_UP_GPIO_Port, &GPIO_InitStruct);
+void buttons_deinit(void) {
+    if (!buttons.initialized) {
+        LOG_WARN(TAG, "Buttons were not initialized");
+        return;
+    }
+
+    for (uint8_t i = 0; i < buttons.num; i++) {
+        BUTTON_DEINIT(buttons.bindings[i].gpio_port, buttons.bindings[i].gpio_pin);
+    }
+
+    buttons.initialized = false;
+
+    LOG_INFO(TAG, "Buttons deinitialized");
 }

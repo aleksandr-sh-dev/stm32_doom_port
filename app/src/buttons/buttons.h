@@ -1,14 +1,18 @@
 #pragma once
 
-#define FIRE_KEY        (1 << 0)
-#define ACTIVATE_KEY    (1 << 1)
-#define RUN_KEY         (1 << 2)
-#define FORWARD_KEY     (1 << 3)
-#define BACKWARD_KEY    (1 << 4)
-#define LEFT_KEY        (1 << 5)
-#define RIGHT_KEY       (1 << 6)
-#define WEAPON_DOWN_KEY (1 << 7)
-#define WEAPON_UP_KEY   (1 << 8)
+#include <stdbool.h>
+
+#include "gpio.h"
+
+#define FIRE_KEY_MASK        (1 << 0)
+#define ACTIVATE_KEY_MASK    (1 << 1)
+#define RUN_KEY_MASK         (1 << 2)
+#define FORWARD_KEY_MASK     (1 << 3)
+#define BACKWARD_KEY_MASK    (1 << 4)
+#define LEFT_KEY_MASK        (1 << 5)
+#define RIGHT_KEY_MASK       (1 << 6)
+#define WEAPON_DOWN_KEY_MASK (1 << 7)
+#define WEAPON_UP_KEY_MASK   (1 << 8)
 
 // Right Side
 #define FIRE_Pin           GPIO_PIN_6
@@ -36,6 +40,25 @@
 #define WEAPON_UP_Pin       GPIO_PIN_0
 #define WEAPON_UP_GPIO_Port GPIOI
 
-void     buttons_init(void);
+#define BUTTON_READ(port, pin)         (HAL_GPIO_ReadPin(port, pin))
+#define BUTTON_INIT(port, init_struct) (HAL_GPIO_Init(port, init_struct))
+#define BUTTON_DEINIT(port, pin)       (HAL_GPIO_DeInit(port, pin))
+
+typedef struct {
+    uint32_t      bitmask;
+    GPIO_TypeDef *gpio_port;
+    uint16_t      gpio_pin;
+    uint8_t       doom_key;
+} button_binding_t;
+
+typedef struct {
+    button_binding_t *bindings;
+    volatile uint32_t state;
+    uint8_t num;
+    bool initialized;
+} buttons_t;
+
+int      buttons_init(const button_binding_t *bindings, uint8_t buttons_num);
+void     buttons_deinit(void);
 void     buttons_check(void);
 uint32_t buttons_get_state(void);

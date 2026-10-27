@@ -81,7 +81,7 @@ void start_task(void *argument) {
     log_init();
 
     // Init buttons
-    buttons_init();
+    buttons_init(button_default_bindings, CONFIG_BUTTONS_NUM);
 
     // Start TIM8 for buttons check
     HAL_TIM_Base_Start_IT(&htim8);
