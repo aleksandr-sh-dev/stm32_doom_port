@@ -28,7 +28,7 @@
 #include "memory.h"
 #include "memory_msp.h"
 #include "ff_gen_drv.h"
-#include "../../bsp/stm32-mfxstm32l152/mfxstm32l152.h"
+#include "../../board/bsp/STM32F7508/Components/mfxstm32l152/mfxstm32l152.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
