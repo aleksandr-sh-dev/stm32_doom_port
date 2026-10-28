@@ -319,7 +319,7 @@ void LCD_LOG_UpdateDisplay(void) {
     }
 }
 
-#if(LCD_SCROLL_ENABLED == 1)
+#if (LCD_SCROLL_ENABLED == 1)
 /**
  * @brief  Display previous text frame
  * @param  None

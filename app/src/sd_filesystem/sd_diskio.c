@@ -91,7 +91,7 @@ See BSP_SD_ErrorCallback() and BSP_SD_AbortCallback() below
 
 /* Private variables ---------------------------------------------------------*/
 #if defined(ENABLE_SCRATCH_BUFFER)
-#if(ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
+#if (ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
 ALIGN_32BYTES(static uint8_t scratch[BLOCKSIZE]); // 32-Byte aligned for cache maintenance
 #else
 __ALIGN_BEGIN static uint8_t scratch[BLOCKSIZE] __ALIGN_END;
@@ -100,7 +100,7 @@ __ALIGN_BEGIN static uint8_t scratch[BLOCKSIZE] __ALIGN_END;
 /* Disk status */
 static volatile DSTATUS Stat = STA_NOINIT;
 
-#if(osCMSIS <= 0x20000U)
+#if (osCMSIS <= 0x20000U)
 static osMessageQId SDQueueID = NULL;
 #else
 static osMessageQueueId_t SDQueueID = NULL;
@@ -139,7 +139,7 @@ const Diskio_drvTypeDef SD_Driver = {
 static int SD_CheckStatusWithTimeout(uint32_t timeout) {
     uint32_t timer;
     /* block until SDIO peripheral is ready again or a timeout occur */
-#if(osCMSIS <= 0x20000U)
+#if (osCMSIS <= 0x20000U)
     timer = osKernelSysTick();
     while(osKernelSysTick() - timer < timeout)
 #else
@@ -177,7 +177,7 @@ DSTATUS SD_initialize(BYTE lun) {
      * check that the kernel has been started before continuing
      * as the osMessage API will fail otherwise
      */
-#if(osCMSIS <= 0x20000U)
+#if (osCMSIS <= 0x20000U)
     if(osKernelRunning())
 #else
     if(osKernelGetState() == osKernelRunning)
@@ -200,7 +200,7 @@ DSTATUS SD_initialize(BYTE lun) {
 
         if(Stat != STA_NOINIT) {
             if(SDQueueID == NULL) {
-#if(osCMSIS <= 0x20000U)
+#if (osCMSIS <= 0x20000U)
                 osMessageQDef(SD_Queue, QUEUE_SIZE, uint16_t);
                 SDQueueID = osMessageCreate(osMessageQ(SD_Queue), NULL);
 #else
@@ -242,13 +242,13 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count) {
     uint8_t  ret;
     DRESULT  res = RES_ERROR;
     uint32_t timer;
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
     osEvent event;
 #else
     uint16_t   event;
     osStatus_t status;
 #endif
-#if(ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
+#if (ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
     uint32_t alignedAddr;
 #endif
     /*
@@ -262,7 +262,7 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count) {
 #if defined(ENABLE_SCRATCH_BUFFER)
     if(!((uint32_t)buff & 0x3)) {
 #endif
-#if(ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
+#if (ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
         alignedAddr = (uint32_t)buff & ~0x1F;
         // Clean whole aligned buffer from data cache
         SCB_CleanDCache_by_Addr((uint32_t *)alignedAddr, count * BLOCKSIZE + ((uint32_t)buff - alignedAddr));
@@ -271,7 +271,7 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count) {
         ret = BSP_SD_ReadBlocks_DMA((uint32_t *)buff, (uint32_t)(sector), count);
 
         if(ret == MSD_OK) {
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
             /* wait for a message from the queue or a timeout */
             event = osMessageGet(SDQueueID, SD_TIMEOUT);
 
@@ -290,7 +290,7 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count) {
                     {
                         if(BSP_SD_GetCardState() == SD_TRANSFER_OK) {
                             res = RES_OK;
-#if(ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
+#if (ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
                             /*
                             the SCB_InvalidateDCache_by_Addr() requires a 32-Byte aligned address,
                             adjust the address and the D-Cache size to invalidate accordingly.
@@ -302,7 +302,7 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count) {
                             break;
                         }
                     }
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
                 }
             }
 #else
@@ -319,7 +319,7 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count) {
             ret = BSP_SD_ReadBlocks_DMA((uint32_t *)scratch, (uint32_t)sector++, 1);
             if(ret == MSD_OK) {
                 /* wait until the read is successful or a timeout occurs */
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
                 /* wait for a message from the queue or a timeout */
                 event = osMessageGet(SDQueueID, SD_TIMEOUT);
 
@@ -347,13 +347,13 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count) {
                         if(ret != MSD_OK) {
                             break;
                         }
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
                     }
                 }
 #else
                 }
 #endif
-#if(ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
+#if (ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
                 /*
                  *
                  * invalidate the scratch buffer before the next read to get the actual data instead of the cached one
@@ -391,7 +391,7 @@ DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count) {
     DRESULT  res = RES_ERROR;
     uint32_t timer;
 
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
     osEvent event;
 #else
     uint16_t   event;
@@ -413,7 +413,7 @@ DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count) {
 #if defined(ENABLE_SCRATCH_BUFFER)
     if(!((uint32_t)buff & 0x3)) {
 #endif
-#if(ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
+#if (ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
         uint32_t alignedAddr;
         /*
           the SCB_CleanDCache_by_Addr() requires a 32-Byte aligned address
@@ -424,7 +424,7 @@ DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count) {
 #endif
 
         if(BSP_SD_WriteBlocks_DMA((uint32_t *)buff, (uint32_t)(sector), count) == MSD_OK) {
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
             /* Get the message from the queue */
             event = osMessageGet(SDQueueID, SD_TIMEOUT);
 
@@ -434,7 +434,7 @@ DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count) {
         status = osMessageQueueGet(SDQueueID, (void *)&event, NULL, SD_TIMEOUT);
         if((status == osOK) && (event == WRITE_CPLT_MSG)) {
 #endif
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
                     timer = osKernelSysTick();
                     /* block until SDIO IP is ready or a timeout occur */
                     while(osKernelSysTick() - timer < SD_TIMEOUT)
@@ -449,7 +449,7 @@ DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count) {
                             break;
                         }
                     }
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
                 }
             }
 #else
@@ -461,7 +461,7 @@ DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count) {
         /* Slow path, fetch each sector a part and memcpy to destination buffer */
         int i;
 
-#if(ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
+#if (ENABLE_SD_DMA_CACHE_MAINTENANCE == 1)
         /*
          * invalidate the scratch buffer before the next write to get the actual data instead of the cached one
          */
@@ -474,7 +474,7 @@ DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count) {
             ret = BSP_SD_WriteBlocks_DMA((uint32_t *)scratch, (uint32_t)sector++, 1);
             if(ret == MSD_OK) {
                 /* wait until the read is successful or a timeout occurs */
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
                 /* wait for a message from the queue or a timeout */
                 event = osMessageGet(SDQueueID, SD_TIMEOUT);
 
@@ -502,7 +502,7 @@ DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count) {
                         if(ret != MSD_OK) {
                             break;
                         }
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
                     }
                 }
 #else
@@ -593,7 +593,7 @@ void BSP_SD_WriteCpltCallback(void) {
      * No need to add an "osKernelRunning()" check here, as the SD_initialize()
      * is always called before any SD_Read()/SD_Write() call
      */
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
     osMessagePut(SDQueueID, WRITE_CPLT_MSG, 0);
 #else
     const uint16_t msg = WRITE_CPLT_MSG;
@@ -611,7 +611,7 @@ void BSP_SD_ReadCpltCallback(void) {
      * No need to add an "osKernelRunning()" check here, as the SD_initialize()
      * is always called before any SD_Read()/SD_Write() call
      */
-#if(osCMSIS < 0x20000U)
+#if (osCMSIS < 0x20000U)
     osMessagePut(SDQueueID, READ_CPLT_MSG, 0);
 #else
     const uint16_t msg = READ_CPLT_MSG;

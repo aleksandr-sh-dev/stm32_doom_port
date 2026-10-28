@@ -61,9 +61,9 @@ void        PeriphCommonClock_Config(void);
 static void MPU_Config(void);
 
 // FreeRTOS heap in SDRAM
-#ifdef USE_SDRAM_MEMORY
+#ifdef CONFIG_USE_SDRAM_MEMORY
 uint8_t ucHeap[configTOTAL_HEAP_SIZE] __attribute__((section(".sdram_data")));
-#endif // USE_SDRAM_MEMORY
+#endif // CONFIG_USE_SDRAM_MEMORY
 
 static const char *TAG = "MAIN";
 
@@ -81,7 +81,11 @@ void start_task(void *argument) {
     log_init();
 
     // Init buttons
-    buttons_init(button_default_bindings, CONFIG_BUTTONS_NUM);
+    int res = buttons_init(button_default_bindings, CONFIG_BUTTONS_NUM);
+    if(res != 0) {
+        LOG_ERROR(TAG, "Failed to initialize buttons: (%d)", res);
+        configASSERT(0);
+    }
 
     // Start TIM8 for buttons check
     HAL_TIM_Base_Start_IT(&htim8);

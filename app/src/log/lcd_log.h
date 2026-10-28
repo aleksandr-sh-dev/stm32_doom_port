@@ -68,7 +68,7 @@
  * @{
  */
 
-#if(LCD_SCROLL_ENABLED == 1)
+#if (LCD_SCROLL_ENABLED == 1)
 #define LCD_CACHE_DEPTH (YWINDOW_SIZE + CACHE_SIZE)
 #else
 #define LCD_CACHE_DEPTH YWINDOW_SIZE
@@ -136,7 +136,7 @@ void LCD_LOG_SetFooter(uint8_t *Status);
 void LCD_LOG_ClearTextZone(void);
 void LCD_LOG_UpdateDisplay(void);
 
-#if(LCD_SCROLL_ENABLED == 1)
+#if (LCD_SCROLL_ENABLED == 1)
 ErrorStatus LCD_LOG_ScrollBack(void);
 ErrorStatus LCD_LOG_ScrollForward(void);
 #endif

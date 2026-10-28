@@ -39,18 +39,6 @@ static const osThreadAttr_t doomgeneric_task_attributes = {
     .priority   = (osPriority_t)osPriorityAboveNormal,
 };
 
-static const uint8_t DOOM_KEY_MAP[9] = {
-    KEY_FIRE,       // Bit 0: FIRE
-    KEY_USE,        // Bit 1: ACTIVATE
-    KEY_ENTER,      // Bit 2: ENTER
-    KEY_UPARROW,    // Bit 3: FORWARD
-    KEY_DOWNARROW,  // Bit 4: BACKWARD
-    KEY_LEFTARROW,  // Bit 5: LEFT
-    KEY_RIGHTARROW, // Bit 6: RIGHT
-    KEY_STRAFE_L,   // Bit 7: BUMPER L (was WEAPON_DOWN)
-    KEY_STRAFE_R    // Bit 8: BUMPER R (was WEAPON_UP)
-};
-
 static uint32_t previous_button_state = 0;
 
 extern struct color colors[256];
@@ -112,27 +100,25 @@ void DG_DrawFrame(void) {
 }
 
 int DG_GetKey(int *pressed, uint8_t *doom_key) {
-    uint32_t current_button_state = buttons_get_state();
-    
-    uint32_t changed_buttons = current_button_state ^ previous_button_state;
-
-    if (changed_buttons == 0) {
-        return 0; 
+    const buttons_t *buttons = buttons_get_buttons();
+    if (buttons == NULL) {
+        return 0;
     }
 
-    for (int i = 0; i < 9; i++) {
-        uint32_t mask = (1 << i);
-        
+    uint32_t state           = buttons->state;
+    uint32_t changed_buttons = state ^ previous_button_state;
+    if (changed_buttons == 0) {
+        return 0;
+    }
+
+    for (int button = 0; button < buttons->num; button++) {
+        uint32_t mask = (1U << button);
+
         if (changed_buttons & mask) {
-            *doom_key = DOOM_KEY_MAP[i];
-            
-            // Is the button currently down (1) or up (0)?
-            *pressed = (current_button_state & mask) ? 1 : 0;
-            
-            // Toggle just this bit in previous_button_state so we don't process it again
+            *doom_key = buttons->bindings[button].doom_key;
+            *pressed  = (state & mask) ? 1 : 0;
             previous_button_state ^= mask;
-            
-            return 1; 
+            return 1;
         }
     }
 

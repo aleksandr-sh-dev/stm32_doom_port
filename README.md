@@ -9,17 +9,17 @@ https://github.com/user-attachments/assets/e0355555-e895-42bd-9704-132b6425685e
 ### Ubuntu / Debian (`apt`)
 ```bash
 sudo apt update
-sudo apt install cmake ninja-build gcc-arm-none-eabi libnewlib-arm-none-eabi git stlink-tools
+sudo apt install cmake ninja-build gcc-arm-none-eabi libnewlib-arm-none-eabi git stlink-tools clang-format
 ```
 
 ### Arch Linux (`pacman`)
 ```bash
-sudo pacman -S cmake ninja arm-none-eabi-gcc arm-none-eabi-newlib git stlink
+sudo pacman -S cmake ninja arm-none-eabi-gcc arm-none-eabi-newlib git stlink clang-format
 ```
 
 ### macOS (`brew`)
 ```bash
-brew install cmake ninja arm-none-eabi-gcc git stlink
+brew install cmake ninja arm-none-eabi-gcc git stlink clang-format
 ```
 
 ### Windows (**TBD**)

@@ -4,16 +4,6 @@
 
 #include "gpio.h"
 
-#define FIRE_KEY_MASK        (1 << 0)
-#define ACTIVATE_KEY_MASK    (1 << 1)
-#define RUN_KEY_MASK         (1 << 2)
-#define FORWARD_KEY_MASK     (1 << 3)
-#define BACKWARD_KEY_MASK    (1 << 4)
-#define LEFT_KEY_MASK        (1 << 5)
-#define RIGHT_KEY_MASK       (1 << 6)
-#define WEAPON_DOWN_KEY_MASK (1 << 7)
-#define WEAPON_UP_KEY_MASK   (1 << 8)
-
 // Right Side
 #define FIRE_Pin           GPIO_PIN_6
 #define FIRE_GPIO_Port     GPIOG
@@ -45,7 +35,7 @@
 #define BUTTON_DEINIT(port, pin)       (HAL_GPIO_DeInit(port, pin))
 
 typedef struct {
-    uint32_t      bitmask;
+    char         *name;
     GPIO_TypeDef *gpio_port;
     uint16_t      gpio_pin;
     uint8_t       doom_key;
@@ -54,11 +44,13 @@ typedef struct {
 typedef struct {
     button_binding_t *bindings;
     volatile uint32_t state;
-    uint8_t num;
-    bool initialized;
+    uint8_t           num;
+    bool              initialized;
 } buttons_t;
 
-int      buttons_init(const button_binding_t *bindings, uint8_t buttons_num);
-void     buttons_deinit(void);
-void     buttons_check(void);
-uint32_t buttons_get_state(void);
+int               buttons_init(const button_binding_t *bindings, uint8_t buttons_num);
+void              buttons_deinit(void);
+void              buttons_check(void);
+uint32_t          buttons_get_state(void);
+const button_binding_t *buttons_get_bindings(void);
+const buttons_t        *buttons_get_buttons(void);
