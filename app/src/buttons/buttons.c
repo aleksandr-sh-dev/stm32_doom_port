@@ -34,7 +34,7 @@ const button_binding_t *buttons_get_bindings(void) {
 }
 
 const buttons_t *buttons_get_buttons(void) {
-    if (!buttons.initialized) {
+    if(!buttons.initialized) {
         LOG_ERROR(TAG, "Buttons hasn't been initialized");
         return NULL;
     }
@@ -66,7 +66,7 @@ int buttons_init(const button_binding_t *bindings, uint8_t buttons_num) {
     }
 
     // Initialize bindings
-    memcpy(buttons.bindings, bindings, sizeof(button_binding_t));
+    buttons.bindings = bindings;
     buttons.num = buttons_num;
 
     GPIO_InitTypeDef GPIO_InitStruct = {0};

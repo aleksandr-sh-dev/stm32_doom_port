@@ -42,15 +42,15 @@ typedef struct {
 } button_binding_t;
 
 typedef struct {
-    button_binding_t *bindings;
+    const button_binding_t *bindings;
     volatile uint32_t state;
     uint8_t           num;
     bool              initialized;
 } buttons_t;
 
-int               buttons_init(const button_binding_t *bindings, uint8_t buttons_num);
-void              buttons_deinit(void);
-void              buttons_check(void);
-uint32_t          buttons_get_state(void);
+int                     buttons_init(const button_binding_t *bindings, uint8_t buttons_num);
+void                    buttons_deinit(void);
+void                    buttons_check(void);
+uint32_t                buttons_get_state(void);
 const button_binding_t *buttons_get_bindings(void);
 const buttons_t        *buttons_get_buttons(void);

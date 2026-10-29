@@ -1256,11 +1256,9 @@ void BSP_DrawFrame(void *pSrc, void *pDst, uint32_t xSize, uint32_t ySize, uint3
     /* Memory-to-Memory with Pixel Format Conversion */
     hDma2dHandler.Init.Mode         = DMA2D_M2M_PFC;
     hDma2dHandler.Init.ColorMode    = DMA2D_OUTPUT_ARGB8888;
-    
-    /* CRITICAL FIX: The LCD is 480 wide, Doom is 320 wide. 
-       The gap is exactly 160 pixels! This forces the line break. */
-    hDma2dHandler.Init.OutputOffset = 480 - 320; 
-    
+    // hDma2dHandler.Init.OutputOffset = 480 - 320; 
+    hDma2dHandler.Init.OutputOffset = 0;
+
     /* The source is a tightly packed 8-bit array */
     hDma2dHandler.LayerCfg[1].InputOffset    = 0;
     hDma2dHandler.LayerCfg[1].InputColorMode = DMA2D_INPUT_L8;
@@ -1271,7 +1269,7 @@ void BSP_DrawFrame(void *pSrc, void *pDst, uint32_t xSize, uint32_t ySize, uint3
     {
         if(HAL_DMA2D_ConfigLayer(&hDma2dHandler, 1) == HAL_OK) 
         {
-            /* 1. Load the 32-bit Palette (CLUT) into Hardware */
+            /* Load the 32-bit Palette (CLUT) into Hardware */
             DMA2D_CLUTCfgTypeDef clutCfg;
             clutCfg.pCLUT = pClut;
             clutCfg.CLUTColorMode = DMA2D_CCM_ARGB8888;
@@ -1280,7 +1278,7 @@ void BSP_DrawFrame(void *pSrc, void *pDst, uint32_t xSize, uint32_t ySize, uint3
             HAL_DMA2D_CLUTLoad(&hDma2dHandler, clutCfg, 1);
             HAL_DMA2D_PollForTransfer(&hDma2dHandler, 10); /* Wait for CLUT */
             
-            /* 2. Start the pixel transfer */
+            /* Start the pixel transfer */
             if(HAL_DMA2D_Start(&hDma2dHandler, (uint32_t)pSrc, (uint32_t)pDst, xSize, ySize) == HAL_OK) 
             {
                 HAL_DMA2D_PollForTransfer(&hDma2dHandler, 100); /* Wait for Frame */

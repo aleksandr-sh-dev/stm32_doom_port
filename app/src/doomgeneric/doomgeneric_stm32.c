@@ -101,20 +101,20 @@ void DG_DrawFrame(void) {
 
 int DG_GetKey(int *pressed, uint8_t *doom_key) {
     const buttons_t *buttons = buttons_get_buttons();
-    if (buttons == NULL) {
+    if(buttons == NULL) {
         return 0;
     }
 
     uint32_t state           = buttons->state;
     uint32_t changed_buttons = state ^ previous_button_state;
-    if (changed_buttons == 0) {
+    if(changed_buttons == 0) {
         return 0;
     }
 
-    for (int button = 0; button < buttons->num; button++) {
+    for(int button = 0; button < buttons->num; button++) {
         uint32_t mask = (1U << button);
 
-        if (changed_buttons & mask) {
+        if(changed_buttons & mask) {
             *doom_key = buttons->bindings[button].doom_key;
             *pressed  = (state & mask) ? 1 : 0;
             previous_button_state ^= mask;
