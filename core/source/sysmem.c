@@ -27,7 +27,7 @@
 
 #include "config.h"
 
-#ifndef USE_SDRAM_MEMORY
+#ifndef CONFIG_USE_SDRAM_MEMORY
 /**
  * Pointer to the current high watermark of the heap usage
  */
@@ -112,4 +112,4 @@ void *_sbrk(ptrdiff_t incr) {
 __strong_reference(_sbrk, sbrk);
 #endif
 
-#endif // USE_SDRAM_MEMORY
+#endif // CONFIG_USE_SDRAM_MEMORY

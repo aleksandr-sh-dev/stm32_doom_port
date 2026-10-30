@@ -25,12 +25,12 @@ static int log_out(int ch, lwprintf_t *p) {
 }
 
 void log_init(void) {
-    if(LOG_MODE & UART_LOGGING) {
+    if(CONFIG_LOG_MODE & UART_LOGGING) {
         lwprintf_init(log_out);
         lwprintf_printf("Initialized logs\r\n");
     }
 
-    if(LOG_MODE & SCREEN_LOGGING) {
+    if(CONFIG_LOG_MODE & SCREEN_LOGGING) {
         LCD_LOG_Init();
         LCD_LOG_SetHeader((uint8_t *)"LOGGING");
     }

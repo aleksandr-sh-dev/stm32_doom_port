@@ -17,6 +17,8 @@
 
 #include "utils.h"
 #include "fatfs.h"
+#include "buttons.h"
+#include "gpio.h"
 
 // Doomgeneric lib
 #include "doomkeys.h"
@@ -36,6 +38,8 @@ static const osThreadAttr_t doomgeneric_task_attributes = {
     .stack_size = 2048 * 4,
     .priority   = (osPriority_t)osPriorityAboveNormal,
 };
+
+static uint32_t previous_button_state = 0;
 
 extern struct color colors[256];
 static uint32_t     dma2d_clut[256];
@@ -60,24 +64,24 @@ __ALIGNED_32__ __SDRAM_MEMORY__ static uint8_t stretched_buffer[480 * 272];
 /* Fast pre-computed lookup tables */
 static uint16_t x_lut[480];
 static uint16_t y_lut[272];
-static bool lut_init = false;
+static bool     lut_init = false;
 
-static void stretch_frame_8bit(uint8_t* src, uint8_t* dst) {
-    if (!lut_init) {
-        for (int x = 0; x < 480; x++) {
+static void stretch_frame_8bit(uint8_t *src, uint8_t *dst) {
+    if(!lut_init) {
+        for(int x = 0; x < 480; x++) {
             x_lut[x] = (x * 320) / 480;
         }
-        for (int y = 0; y < 272; y++) {
-            y_lut[y] = ((y * 200) / 272) * 320; 
+        for(int y = 0; y < 272; y++) {
+            y_lut[y] = ((y * 200) / 272) * 320;
         }
         lut_init = true;
     }
 
-    for (int y = 0; y < 272; y++) {
-        uint8_t* src_row = src + y_lut[y];
-        uint8_t* dst_row = dst + (y * 480);
-        
-        for (int x = 0; x < 480; x++) {
+    for(int y = 0; y < 272; y++) {
+        uint8_t *src_row = src + y_lut[y];
+        uint8_t *dst_row = dst + (y * 480);
+
+        for(int x = 0; x < 480; x++) {
             dst_row[x] = src_row[x_lut[x]];
         }
     }
@@ -96,6 +100,28 @@ void DG_DrawFrame(void) {
 }
 
 int DG_GetKey(int *pressed, uint8_t *doom_key) {
+    const buttons_t *buttons = buttons_get_buttons();
+    if(buttons == NULL) {
+        return 0;
+    }
+
+    uint32_t state           = buttons->state;
+    uint32_t changed_buttons = state ^ previous_button_state;
+    if(changed_buttons == 0) {
+        return 0;
+    }
+
+    for(int button = 0; button < buttons->num; button++) {
+        uint32_t mask = (1U << button);
+
+        if(changed_buttons & mask) {
+            *doom_key = buttons->bindings[button].doom_key;
+            *pressed  = (state & mask) ? 1 : 0;
+            previous_button_state ^= mask;
+            return 1;
+        }
+    }
+
     return 0;
 }
 

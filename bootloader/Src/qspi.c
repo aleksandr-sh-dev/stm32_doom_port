@@ -33,7 +33,7 @@
 #if defined (USE_STM32F7508_DISCO_REVC03)
 #include "../Components/w25q128j/w25q128j.h"
 #else /* USE_STM32F7508_DISCO */
-#include "../../bsp/stm32-n25q128a/n25q128a.h"
+#include "../../board/bsp/STM32F7508/Components/n25q128a/n25q128a.h"
 #endif /* USE_STM32F7508_DISCO_REVC03 */
 #if (CODE_AREA == USE_QSPI) || (BINARY_AREA == USE_SPI_NOR)
 /** @addtogroup QSPI

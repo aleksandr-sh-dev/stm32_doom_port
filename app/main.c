@@ -53,6 +53,7 @@
 #include "log.h"
 #include "fatfs.h"
 #include "doomgeneric_stm32.h"
+#include "buttons.h"
 
 /* Private function prototypes -----------------------------------------------*/
 void        SystemClock_Config(void);
@@ -60,9 +61,9 @@ void        PeriphCommonClock_Config(void);
 static void MPU_Config(void);
 
 // FreeRTOS heap in SDRAM
-#ifdef USE_SDRAM_MEMORY
+#ifdef CONFIG_USE_SDRAM_MEMORY
 uint8_t ucHeap[configTOTAL_HEAP_SIZE] __attribute__((section(".sdram_data")));
-#endif // USE_SDRAM_MEMORY
+#endif // CONFIG_USE_SDRAM_MEMORY
 
 static const char *TAG = "MAIN";
 
@@ -78,6 +79,16 @@ void start_task(void *argument) {
 
     // Init logging
     log_init();
+
+    // Init buttons
+    int res = buttons_init(button_default_bindings, CONFIG_BUTTONS_NUM);
+    if(res != 0) {
+        LOG_ERROR(TAG, "Failed to initialize buttons: (%d)", res);
+        configASSERT(0);
+    }
+
+    // Start TIM8 for buttons check
+    HAL_TIM_Base_Start_IT(&htim8);
 
     // Init FatFS
     MX_FATFS_Init();
@@ -127,7 +138,6 @@ int main(void) {
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
     MX_CRC_Init();
-    MX_DCMI_Init();
     MX_DMA2D_Init();
     MX_FMC_Init();
     MX_I2C1_Init();
@@ -135,11 +145,9 @@ int main(void) {
     MX_RTC_Init();
     MX_SAI2_Init();
     MX_SPDIFRX_Init();
-    MX_SPI2_Init();
     MX_TIM1_Init();
     MX_TIM2_Init();
     MX_TIM3_Init();
-    MX_TIM5_Init();
     MX_TIM8_Init();
     MX_TIM12_Init();
     MX_USART1_UART_Init();
@@ -281,7 +289,7 @@ void MPU_Config(void) {
     MPU_InitStruct.DisableExec      = MPU_INSTRUCTION_ACCESS_ENABLE;
     HAL_MPU_ConfigRegion(&MPU_InitStruct);
 
-#ifdef USE_SDRAM_MEMORY
+#ifdef CONFIG_USE_SDRAM_MEMORY
     /* ========================================================= */
     /* REGION 2: SDRAM Config (0xC0000000)                   */
     /* ========================================================= */
@@ -297,7 +305,7 @@ void MPU_Config(void) {
     MPU_InitStruct.IsCacheable      = MPU_ACCESS_CACHEABLE;
     MPU_InitStruct.IsBufferable     = MPU_ACCESS_BUFFERABLE;
     HAL_MPU_ConfigRegion(&MPU_InitStruct);
-#endif // USE_SDRAM_MEMORY
+#endif // CONFIG_USE_SDRAM_MEMORY
 
     /* Enables the MPU */
     HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
@@ -317,6 +325,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     /* USER CODE END Callback 0 */
     if(htim->Instance == TIM6) {
         HAL_IncTick();
+    } else if(htim->Instance == TIM8) {
+        buttons_check();
     }
     /* USER CODE BEGIN Callback 1 */
 

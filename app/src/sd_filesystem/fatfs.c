@@ -19,10 +19,10 @@
 #include "fatfs.h"
 #include "utils.h"
 
-uint8_t retSD;                    /* Return value for SD */
-__ALIGNED_32__ char    SDPath[4]; /* SD logical drive path */
-__ALIGNED_32__ FATFS   SDFatFS;   /* File system object for SD logical drive */
-__ALIGNED_32__ FIL     SDFile;    /* File object for SD */
+uint8_t              retSD;     /* Return value for SD */
+__ALIGNED_32__ char  SDPath[4]; /* SD logical drive path */
+__ALIGNED_32__ FATFS SDFatFS;   /* File system object for SD logical drive */
+__ALIGNED_32__ FIL   SDFile;    /* File object for SD */
 
 /* USER CODE BEGIN Variables */
 

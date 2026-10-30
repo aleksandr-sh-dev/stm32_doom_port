@@ -27,7 +27,6 @@
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
-TIM_HandleTypeDef htim5;
 TIM_HandleTypeDef htim8;
 TIM_HandleTypeDef htim12;
 
@@ -190,70 +189,69 @@ void MX_TIM3_Init(void) {
     HAL_TIM_MspPostInit(&htim3);
 }
 /* TIM5 init function */
-void MX_TIM5_Init(void) {
-    /* USER CODE BEGIN TIM5_Init 0 */
+// void MX_TIM5_Init(void) {
+//     /* USER CODE BEGIN TIM5_Init 0 */
 
-    /* USER CODE END TIM5_Init 0 */
+//     /* USER CODE END TIM5_Init 0 */
 
-    TIM_ClockConfigTypeDef  sClockSourceConfig = {0};
-    TIM_MasterConfigTypeDef sMasterConfig      = {0};
-    TIM_OC_InitTypeDef      sConfigOC          = {0};
+//     TIM_ClockConfigTypeDef  sClockSourceConfig = {0};
+//     TIM_MasterConfigTypeDef sMasterConfig      = {0};
+//     TIM_OC_InitTypeDef      sConfigOC          = {0};
 
-    /* USER CODE BEGIN TIM5_Init 1 */
+//     /* USER CODE BEGIN TIM5_Init 1 */
 
-    /* USER CODE END TIM5_Init 1 */
-    htim5.Instance               = TIM5;
-    htim5.Init.Prescaler         = 0;
-    htim5.Init.CounterMode       = TIM_COUNTERMODE_UP;
-    htim5.Init.Period            = 4294967295;
-    htim5.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
-    htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-    if(HAL_TIM_Base_Init(&htim5) != HAL_OK) {
-        Error_Handler();
-    }
-    sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-    if(HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK) {
-        Error_Handler();
-    }
-    if(HAL_TIM_PWM_Init(&htim5) != HAL_OK) {
-        Error_Handler();
-    }
-    sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-    sMasterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
-    if(HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK) {
-        Error_Handler();
-    }
-    sConfigOC.OCMode     = TIM_OCMODE_PWM1;
-    sConfigOC.Pulse      = 0;
-    sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-    sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-    if(HAL_TIM_PWM_ConfigChannel(&htim5, &sConfigOC, TIM_CHANNEL_4) != HAL_OK) {
-        Error_Handler();
-    }
-    /* USER CODE BEGIN TIM5_Init 2 */
+//     /* USER CODE END TIM5_Init 1 */
+//     htim5.Instance               = TIM5;
+//     htim5.Init.Prescaler         = 0;
+//     htim5.Init.CounterMode       = TIM_COUNTERMODE_UP;
+//     htim5.Init.Period            = 4294967295;
+//     htim5.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+//     htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+//     if(HAL_TIM_Base_Init(&htim5) != HAL_OK) {
+//         Error_Handler();
+//     }
+//     sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+//     if(HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK) {
+//         Error_Handler();
+//     }
+//     if(HAL_TIM_PWM_Init(&htim5) != HAL_OK) {
+//         Error_Handler();
+//     }
+//     sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+//     sMasterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
+//     if(HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK) {
+//         Error_Handler();
+//     }
+//     sConfigOC.OCMode     = TIM_OCMODE_PWM1;
+//     sConfigOC.Pulse      = 0;
+//     sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+//     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+//     if(HAL_TIM_PWM_ConfigChannel(&htim5, &sConfigOC, TIM_CHANNEL_4) != HAL_OK) {
+//         Error_Handler();
+//     }
+//     /* USER CODE BEGIN TIM5_Init 2 */
 
-    /* USER CODE END TIM5_Init 2 */
-    HAL_TIM_MspPostInit(&htim5);
-}
+//     /* USER CODE END TIM5_Init 2 */
+//     HAL_TIM_MspPostInit(&htim5);
+// }
 /* TIM8 init function */
 void MX_TIM8_Init(void) {
-    /* USER CODE BEGIN TIM8_Init 0 */
-
-    /* USER CODE END TIM8_Init 0 */
-
     TIM_ClockConfigTypeDef  sClockSourceConfig = {0};
     TIM_MasterConfigTypeDef sMasterConfig      = {0};
 
-    /* USER CODE BEGIN TIM8_Init 1 */
+    htim8.Instance = TIM8;
 
-    /* USER CODE END TIM8_Init 1 */
-    htim8.Instance               = TIM8;
-    htim8.Init.Prescaler         = 0;
-    htim8.Init.CounterMode       = TIM_COUNTERMODE_UP;
-    htim8.Init.Period            = 65535;
+    // --- CONFIGURED FOR 200 MHz APB2 -> 10ms (100Hz) TICK ---
+    // Prescaler = (200,000,000 / 1,000,000) - 1 = 199 (1 tick = 1 µs)
+    // Period    = 10,000 - 1 = 9999 (10,000 µs = 10 ms)
+    htim8.Init.Prescaler   = 199;
+    htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
+    htim8.Init.Period      = 9999;
+
     htim8.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
     htim8.Init.RepetitionCounter = 0;
     htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
     if(HAL_TIM_Base_Init(&htim8) != HAL_OK) {
         Error_Handler();
     }
@@ -267,9 +265,9 @@ void MX_TIM8_Init(void) {
     if(HAL_TIMEx_MasterConfigSynchronization(&htim8, &sMasterConfig) != HAL_OK) {
         Error_Handler();
     }
-    /* USER CODE BEGIN TIM8_Init 2 */
 
-    /* USER CODE END TIM8_Init 2 */
+    HAL_NVIC_EnableIRQ(TIM8_UP_TIM13_IRQn);
+    HAL_NVIC_SetPriority(TIM8_UP_TIM13_IRQn, 5U, 0U);
 }
 /* TIM12 init function */
 void MX_TIM12_Init(void) {
@@ -428,16 +426,16 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *timHandle) {
 
         /* USER CODE END TIM5_MspPostInit 0 */
 
-        __HAL_RCC_GPIOI_CLK_ENABLE();
+        // __HAL_RCC_GPIOI_CLK_ENABLE();
         /**TIM5 GPIO Configuration
         PI0     ------> TIM5_CH4
         */
-        GPIO_InitStruct.Pin       = ARDUINO_PWM_CS_D5_Pin;
-        GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-        GPIO_InitStruct.Pull      = GPIO_NOPULL;
-        GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
-        GPIO_InitStruct.Alternate = GPIO_AF2_TIM5;
-        HAL_GPIO_Init(ARDUINO_PWM_CS_D5_GPIO_Port, &GPIO_InitStruct);
+        // GPIO_InitStruct.Pin       = ARDUINO_PWM_CS_D5_Pin;
+        // GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+        // GPIO_InitStruct.Pull      = GPIO_NOPULL;
+        // GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
+        // GPIO_InitStruct.Alternate = GPIO_AF2_TIM5;
+        // HAL_GPIO_Init(ARDUINO_PWM_CS_D5_GPIO_Port, &GPIO_InitStruct);
 
         /* USER CODE BEGIN TIM5_MspPostInit 1 */
 

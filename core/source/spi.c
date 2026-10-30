@@ -57,64 +57,64 @@ void MX_SPI2_Init(void) {
     /* USER CODE END SPI2_Init 2 */
 }
 
-void HAL_SPI_MspInit(SPI_HandleTypeDef *spiHandle) {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-    if(spiHandle->Instance == SPI2) {
-        /* USER CODE BEGIN SPI2_MspInit 0 */
+// void HAL_SPI_MspInit(SPI_HandleTypeDef *spiHandle) {
+//     GPIO_InitTypeDef GPIO_InitStruct = {0};
+//     if(spiHandle->Instance == SPI2) {
+//         /* USER CODE BEGIN SPI2_MspInit 0 */
 
-        /* USER CODE END SPI2_MspInit 0 */
-        /* SPI2 clock enable */
-        __HAL_RCC_SPI2_CLK_ENABLE();
+//         /* USER CODE END SPI2_MspInit 0 */
+//         /* SPI2 clock enable */
+//         __HAL_RCC_SPI2_CLK_ENABLE();
 
-        __HAL_RCC_GPIOI_CLK_ENABLE();
-        __HAL_RCC_GPIOB_CLK_ENABLE();
-        /**SPI2 GPIO Configuration
-        PI1     ------> SPI2_SCK
-        PB14     ------> SPI2_MISO
-        PB15     ------> SPI2_MOSI
-        */
-        GPIO_InitStruct.Pin       = ARDUINO_SCK_D13_Pin;
-        GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-        GPIO_InitStruct.Pull      = GPIO_NOPULL;
-        GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
-        GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
-        HAL_GPIO_Init(ARDUINO_SCK_D13_GPIO_Port, &GPIO_InitStruct);
+//         __HAL_RCC_GPIOI_CLK_ENABLE();
+//         __HAL_RCC_GPIOB_CLK_ENABLE();
+//         /**SPI2 GPIO Configuration
+//         PI1     ------> SPI2_SCK
+//         PB14     ------> SPI2_MISO
+//         PB15     ------> SPI2_MOSI
+//         */
+//         GPIO_InitStruct.Pin       = ARDUINO_SCK_D13_Pin;
+//         GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+//         GPIO_InitStruct.Pull      = GPIO_NOPULL;
+//         GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
+//         GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
+//         HAL_GPIO_Init(ARDUINO_SCK_D13_GPIO_Port, &GPIO_InitStruct);
 
-        GPIO_InitStruct.Pin       = ARDUINO_MISO_D12_Pin | ARDUINO_MOSI_PWM_D11_Pin;
-        GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-        GPIO_InitStruct.Pull      = GPIO_NOPULL;
-        GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
-        GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
-        HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+//         GPIO_InitStruct.Pin       = ARDUINO_MISO_D12_Pin | ARDUINO_MOSI_PWM_D11_Pin;
+//         GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+//         GPIO_InitStruct.Pull      = GPIO_NOPULL;
+//         GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
+//         GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
+//         HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-        /* USER CODE BEGIN SPI2_MspInit 1 */
+//         /* USER CODE BEGIN SPI2_MspInit 1 */
 
-        /* USER CODE END SPI2_MspInit 1 */
-    }
-}
+//         /* USER CODE END SPI2_MspInit 1 */
+//     }
+// }
 
-void HAL_SPI_MspDeInit(SPI_HandleTypeDef *spiHandle) {
-    if(spiHandle->Instance == SPI2) {
-        /* USER CODE BEGIN SPI2_MspDeInit 0 */
+// void HAL_SPI_MspDeInit(SPI_HandleTypeDef *spiHandle) {
+//     if(spiHandle->Instance == SPI2) {
+//         /* USER CODE BEGIN SPI2_MspDeInit 0 */
 
-        /* USER CODE END SPI2_MspDeInit 0 */
-        /* Peripheral clock disable */
-        __HAL_RCC_SPI2_CLK_DISABLE();
+//         /* USER CODE END SPI2_MspDeInit 0 */
+//         /* Peripheral clock disable */
+//         __HAL_RCC_SPI2_CLK_DISABLE();
 
-        /**SPI2 GPIO Configuration
-        PI1     ------> SPI2_SCK
-        PB14     ------> SPI2_MISO
-        PB15     ------> SPI2_MOSI
-        */
-        HAL_GPIO_DeInit(ARDUINO_SCK_D13_GPIO_Port, ARDUINO_SCK_D13_Pin);
+//         /**SPI2 GPIO Configuration
+//         PI1     ------> SPI2_SCK
+//         PB14     ------> SPI2_MISO
+//         PB15     ------> SPI2_MOSI
+//         */
+//         HAL_GPIO_DeInit(ARDUINO_SCK_D13_GPIO_Port, ARDUINO_SCK_D13_Pin);
 
-        HAL_GPIO_DeInit(GPIOB, ARDUINO_MISO_D12_Pin | ARDUINO_MOSI_PWM_D11_Pin);
+//         HAL_GPIO_DeInit(GPIOB, ARDUINO_MISO_D12_Pin | ARDUINO_MOSI_PWM_D11_Pin);
 
-        /* USER CODE BEGIN SPI2_MspDeInit 1 */
+//         /* USER CODE BEGIN SPI2_MspDeInit 1 */
 
-        /* USER CODE END SPI2_MspDeInit 1 */
-    }
-}
+//         /* USER CODE END SPI2_MspDeInit 1 */
+//     }
+// }
 
 /* USER CODE BEGIN 1 */
 

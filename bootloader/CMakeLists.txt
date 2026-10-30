@@ -10,7 +10,7 @@ add_executable(${CMAKE_PROJECT_NAME})
 # Include core and BSP from the parent directory
 # The second argument specifies the binary directory name inside build_bootloader/
 add_subdirectory(../cmake/core core)
-add_subdirectory(../bsp bsp)
+add_subdirectory(../board bsp)
 
 # Find bootloader sources (ExtMem_Boot template files)
 file(GLOB BOOTLOADER_SOURCES 
