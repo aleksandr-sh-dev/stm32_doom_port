@@ -5,12 +5,14 @@
 #include "gpio.h"
 
 // Right Side
-#define FIRE_Pin           GPIO_PIN_6
-#define FIRE_GPIO_Port     GPIOG
+#define RUN_Pin            GPIO_PIN_6
+#define RUN_GPIO_Port      GPIOG
 #define ACTIVATE_Pin       GPIO_PIN_1
 #define ACTIVATE_GPIO_Port GPIOI
-#define RUN_Pin            GPIO_PIN_15
-#define RUN_GPIO_Port      GPIOH
+#define FIRE_Pin           GPIO_PIN_6 // ARD_A5
+#define FIRE_GPIO_Port     GPIOF
+#define ENTER_Pin          GPIO_PIN_15
+#define ENTER_GPIO_Port    GPIOH
 
 // Left Side
 #define FORWARD_Pin        GPIO_PIN_7
@@ -23,12 +25,22 @@
 #define RIGHT_GPIO_Port    GPIOB
 
 // Left bumpers
-#define WEAPON_DOWN_Pin       GPIO_PIN_15
-#define WEAPON_DOWN_GPIO_Port GPIOB
+#define STRAFE_LEFT_Pin       GPIO_PIN_8 // ARD_A2
+#define STRAFE_LEFT_GPIO_Port GPIOF
+#define WEAPON_DOWN_Pin       GPIO_PIN_9 // ARD_A3
+#define WEAPON_DOWN_GPIO_Port GPIOF
 
 // Right bumpers
-#define WEAPON_UP_Pin       GPIO_PIN_0
-#define WEAPON_UP_GPIO_Port GPIOI
+#define WEAPON_UP_Pin          GPIO_PIN_15 // ARD_D11
+#define WEAPON_UP_GPIO_Port    GPIOB
+#define STRAFE_RIGHT_Pin       GPIO_PIN_0 // ARD_A0
+#define STRAFE_RIGHT_GPIO_Port GPIOA
+
+// Middle Side
+#define AUTOMAP_Pin       GPIO_PIN_10 // ARD_A1
+#define AUTOMAP_GPIO_Port GPIOF
+#define PAUSE_Pin         GPIO_PIN_7 // ARD_A4
+#define PAUSE_GPIO_Port   GPIOF
 
 #define BUTTON_READ(port, pin)         (HAL_GPIO_ReadPin(port, pin))
 #define BUTTON_INIT(port, init_struct) (HAL_GPIO_Init(port, init_struct))
@@ -43,9 +55,9 @@ typedef struct {
 
 typedef struct {
     const button_binding_t *bindings;
-    volatile uint32_t state;
-    uint8_t           num;
-    bool              initialized;
+    volatile uint32_t       state;
+    uint8_t                 num;
+    bool                    initialized;
 } buttons_t;
 
 int                     buttons_init(const button_binding_t *bindings, uint8_t buttons_num);

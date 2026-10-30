@@ -447,12 +447,12 @@ __weak void BSP_CAMERA_MspInit(DCMI_HandleTypeDef *hdcmi, void *Params)
 
   /*** Configure the GPIO ***/
   /* Configure DCMI GPIO as alternate function */
-  gpio_init_structure.Pin       = GPIO_PIN_4 | GPIO_PIN_6;
-  gpio_init_structure.Mode      = GPIO_MODE_AF_PP;
-  gpio_init_structure.Pull      = GPIO_PULLUP;
-  gpio_init_structure.Speed     = GPIO_SPEED_HIGH;
-  gpio_init_structure.Alternate = GPIO_AF13_DCMI;
-  HAL_GPIO_Init(GPIOA, &gpio_init_structure);
+  // gpio_init_structure.Pin       = GPIO_PIN_4 | GPIO_PIN_6;
+  // gpio_init_structure.Mode      = GPIO_MODE_AF_PP;
+  // gpio_init_structure.Pull      = GPIO_PULLUP;
+  // gpio_init_structure.Speed     = GPIO_SPEED_HIGH;
+  // gpio_init_structure.Alternate = GPIO_AF13_DCMI;
+  // HAL_GPIO_Init(GPIOA, &gpio_init_structure);
 
   gpio_init_structure.Pin       = GPIO_PIN_3;
   gpio_init_structure.Mode      = GPIO_MODE_AF_PP;

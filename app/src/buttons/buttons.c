@@ -67,7 +67,7 @@ int buttons_init(const button_binding_t *bindings, uint8_t buttons_num) {
 
     // Initialize bindings
     buttons.bindings = bindings;
-    buttons.num = buttons_num;
+    buttons.num      = buttons_num;
 
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     GPIO_InitStruct.Mode             = GPIO_MODE_INPUT;
