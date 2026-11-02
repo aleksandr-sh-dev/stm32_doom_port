@@ -9,15 +9,13 @@ jobs:
     strategy:
         matrix:
           path:
-            - check: 'workspace/stm32_doom_port/app'
+            - check: 'app'
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-      with:
-        path: workspace/stm32_doom_port
 
     - name: Clang-format check
-      uses: jidicula/clang-format-action@v4.13.0
+      uses: jidicula/clang-format-action@v4.18.0
       with:
-        clang-format-version: '13'
+        clang-format-version: '21'
         check-path: ${{ matrix.path['check'] }}
