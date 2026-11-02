@@ -47,6 +47,10 @@ jobs:
           cppcheck \
             --project=build/Debug/compile_commands.json \
             --file-filter='*/app/*' \
+            -D__GNUC__=13 \
+            -D__GNUC_MINOR__=2 \
+            -D__arm__=1 \
+            -D__ARM_ARCH_7EM__=1 \
             --enable=warning,performance,portability \
             --inline-suppr \
             --suppress=missingIncludeSystem \
