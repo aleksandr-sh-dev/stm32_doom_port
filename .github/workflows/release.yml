@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  Firmware:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: workspace/stm32_doom_port
+          submodules: recursive
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends git cmake ninja-build \
+            gcc-arm-none-eabi libnewlib-arm-none-eabi xz-utils
+
+      - name: Build Bootloader
+        working-directory: workspace/stm32_doom_port
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_TOOLCHAIN_FILE=$PWD/cmake/gcc-arm-none-eabi.cmake \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
+            -S bootloader/ -B build_bootloader -G Ninja
+          ninja -C build_bootloader
+
+      - name: Build Firmware
+        working-directory: workspace/stm32_doom_port
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_TOOLCHAIN_FILE=$PWD/cmake/gcc-arm-none-eabi.cmake \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
+            -S . -B build/Debug -G Ninja
+          ninja doom_port -C build/Debug
+
+      - name: Create Release Artifacts
+        run: |
+          mkdir -p artifacts/doom_port
+
+          cp workspace/stm32_doom_port/build_bootloader/stm32f7508_bootloader.bin \
+            artifacts/doom_port/bootloader.bin
+          cp workspace/stm32_doom_port/build_bootloader/stm32f7508_bootloader.hex \
+            artifacts/doom_port/bootloader.hex
+
+          cp workspace/stm32_doom_port/build/Debug/doom_port.bin \
+            artifacts/doom_port/doom_port_${{ github.ref_name }}.bin
+          cp workspace/stm32_doom_port/build/Debug/doom_port.hex \
+            artifacts/doom_port/doom_port_${{ github.ref_name }}.hex
+
+          # Create SHA256 checksum
+          cd artifacts/doom_port
+          sha256sum * > SHA256SUMS
+          cd ../..
+
+          tar -cJf doom_port_${{ github.ref_name }}.tar.xz -C artifacts doom_port
+          sha256sum doom_port_${{ github.ref_name }}.tar.xz > doom_port_${{ github.ref_name }}.tar.xz.sha256
+
+          cat << 'EOF' > release_body.md
+          ### 📦 Flashing & Hardware Setup
+          * **Bootloader (`bootloader.hex` / `.bin`):** Flash to internal STM32 Flash (`0x08000000`).
+          * **Main Firmware (`doom_port.hex` / `.bin`):** Flash to external QSPI Flash (`0x90000000`) using the `N25Q128A_STM32F7508-DISCO.stldr` external loader.
+          * **MicroSD Card:** Place `doom1.wad` in the root directory of a FAT32-formatted MicroSD card.
+
+          ### 📊 Firmware Memory Footprint
+          ```text
+          EOF
+          arm-none-eabi-size -A workspace/stm32_doom_port/build/Debug/doom_port.elf >> release_body.md
+          echo '```' >> release_body.md
+
+      - name: Save Release Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware
+          path: |
+            doom_port_${{ github.ref_name }}.tar.xz
+            doom_port_${{ github.ref_name }}.tar.xz.sha256
+            release_body.md
+
+  Release:
+    runs-on: ubuntu-22.04
+    needs: ["Firmware"]
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: firmware
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release_body.md
+          generate_release_notes: true
+          files: |
+            doom_port_${{ github.ref_name }}.tar.xz
+            doom_port_${{ github.ref_name }}.tar.xz.sha256

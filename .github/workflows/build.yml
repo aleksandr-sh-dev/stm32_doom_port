@@ -1,0 +1,49 @@
+name: Build
+
+on:
+    pull_request:
+        branches: [master, develop]
+    push:
+        branches: [master, develop]
+
+jobs:
+    Build:
+        runs-on: ubuntu-22.04
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            path: workspace/stm32_doom_port
+            submodules: recursive
+
+        - name: Install Dependencies
+          run: |
+            sudo apt update
+            sudo apt install -y --no-install-recommends git cmake ninja-build \
+              gcc-arm-none-eabi libnewlib-arm-none-eabi
+
+        - name: Build Bootloader
+          run: |
+            cd workspace/stm32_doom_port
+            mkdir -p build_bootloader
+            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=$PWD/cmake/gcc-arm-none-eabi.cmake \
+              -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -S bootloader/ -B build_bootloader -G Ninja
+            ninja -C build_bootloader
+
+        - name: Build Debug
+          run: |
+            cd workspace/stm32_doom_port
+            mkdir -p build/Debug
+            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=$PWD/cmake/gcc-arm-none-eabi.cmake \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -S . -B build/Debug -G Ninja
+            ninja doom_port -C build/Debug
+
+        - name: Build Release
+          run: |
+            cd workspace/stm32_doom_port
+            mkdir -p build/Release
+            cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$PWD/cmake/gcc-arm-none-eabi.cmake \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -S . -B build/Release -G Ninja
+            ninja doom_port -C build/Release
+
+

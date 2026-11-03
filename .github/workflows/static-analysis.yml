@@ -1,0 +1,67 @@
+name: "Static Analysis"
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  cppcheck:
+    name: cppcheck C/C++
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            git cmake ninja-build cppcheck \
+            gcc-arm-none-eabi libnewlib-arm-none-eabi
+
+      - name: Configure Bootloader
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_TOOLCHAIN_FILE=$PWD/cmake/gcc-arm-none-eabi.cmake \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
+            -S bootloader/ -B build_bootloader -G Ninja
+
+      - name: Configure Main Firmware
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_TOOLCHAIN_FILE=$PWD/cmake/gcc-arm-none-eabi.cmake \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
+            -S . -B build/Debug -G Ninja
+
+      - name: Run cppcheck
+        shell: bash
+        run: |
+          cppcheck --version
+          cppcheck \
+            --project=build/Debug/compile_commands.json \
+            --file-filter='*/app/*' \
+            -D__GNUC__=13 \
+            -D__GNUC_MINOR__=2 \
+            -D__arm__=1 \
+            -D__ARM_ARCH_7EM__=1 \
+            --enable=warning,performance,portability \
+            --inline-suppr \
+            --suppress=missingIncludeSystem \
+            --error-exitcode=1 \
+            -j "$(nproc)" \
+            2>&1 | tee cppcheck-report.txt
+
+      - name: Upload cppcheck report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cppcheck-report
+          path: cppcheck-report.txt
+          if-no-files-found: ignore
