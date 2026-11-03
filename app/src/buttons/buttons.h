@@ -60,8 +60,15 @@ typedef struct {
     bool                    initialized;
 } buttons_t;
 
+typedef enum {
+    BUTTONS_OK           = 0,
+    BUTTONS_ERR_NULL_PTR = 1,
+    BUTTONS_ERR_NO_BTNS  = 2,
+    BUTTONS_ERR_NOT_INITIALIZED = 3,
+} button_err_t;
+
 int                     buttons_init(const button_binding_t *bindings, uint8_t buttons_num);
-void                    buttons_deinit(void);
+int                     buttons_deinit(void);
 void                    buttons_check(void);
 uint32_t                buttons_get_state(void);
 const button_binding_t *buttons_get_bindings(void);

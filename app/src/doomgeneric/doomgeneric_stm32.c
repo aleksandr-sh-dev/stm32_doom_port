@@ -21,7 +21,6 @@
 #include "gpio.h"
 
 // Doomgeneric lib
-#include "doomkeys.h"
 #include "m_argv.h"
 #include "doomgeneric.h"
 #include "i_system.h"

@@ -5,7 +5,6 @@
 
 // Project includes
 #include "buttons.h"
-#include "log.h"
 
 // Buttons default binding
 static const button_binding_t button_default_bindings[] = {
