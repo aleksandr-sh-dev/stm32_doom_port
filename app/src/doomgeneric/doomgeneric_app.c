@@ -37,37 +37,33 @@ static bool check_input_devs(void) {
     return true;
 }
 
+static int init_lcd(void) {
+    int res = BSP_LCD_Init();
+    if (res != 0) {
+        LOG_ERROR(TAG, "Failed to init BSP of LCD: %d", res);
+        return DOOMGENERIC_APP_LCD_INIT_ERR;
+    }
+
+    BSP_LCD_LayerDefaultInit(0, LCD_FB_START_ADDRESS);
+    BSP_LCD_DisplayOn();
+    BSP_LCD_SelectLayer(0);
+    BSP_LCD_Clear(LCD_COLOR_BLACK);
+
+    return DOOMGENERIC_APP_OK;
+}
+
 int mkdir(const char *path, uint32_t mode) {
     return -1; // Return -1 to indicate directory creation is unsupported
 }
 
 int doomgeneric_app_stretch_frame(uint8_t *src, uint8_t *dst) {
     if (src == NULL) {
-        return DOOMGENERIC_APP_NULL_PTR;
+        return DOOMGENERIC_APP_NULL_PTR_ERR;
     }
 
     if (dst == NULL) {
-        return DOOMGENERIC_APP_NULL_PTR;
+        return DOOMGENERIC_APP_NULL_PTR_ERR;
     }
-
-    // if(!lut_init) {
-    //     for(int x = 0; x < CONFIG_DISPLAY_RES_X; x++) {
-    //         x_lut[x] = (x * DOOMGENERIC_RESX) / CONFIG_DISPLAY_RES_X;
-    //     }
-    //     for(int y = 0; y < CONFIG_DISPLAY_RES_Y; y++) {
-    //         y_lut[y] = ((y * DOOMGENERIC_RESY) / CONFIG_DISPLAY_RES_Y) * DOOMGENERIC_RESX;
-    //     }
-    //     lut_init = true;
-    // }
-
-    // for(int y = 0; y < CONFIG_DISPLAY_RES_Y; y++) {
-    //     uint8_t *src_row = src + y_lut[y];
-    //     uint8_t *dst_row = dst + (y * CONFIG_DISPLAY_RES_X);
-
-    //     for(int x = 0; x < CONFIG_DISPLAY_RES_X; x++) {
-    //         dst_row[x] = src_row[x_lut[x]];
-    //     }
-    // }
 
     if(!lut_init) {
         for(int x = 0; x < CONFIG_DISPLAY_RES_X; x++) {
@@ -102,7 +98,7 @@ void DG_DrawFrame(void) {
         dma2d_clut[i] = (0xFF << 24) | (colors[i].r << 16) | (colors[i].g << 8) | colors[i].b;
     }
 
-    BSP_DrawFrame(stretched_buffer, fbPtr, CONFIG_DISPLAY_RES_X, CONFIG_DISPLAY_RES_Y, dma2d_clut);
+    doomgeneric_app_cbs.draw_frame(stretched_buffer, fbPtr, CONFIG_DISPLAY_RES_X, CONFIG_DISPLAY_RES_Y, dma2d_clut);
 }
 
 int DG_GetKey(int *pressed, uint8_t *doom_key) {
@@ -114,7 +110,7 @@ int DG_GetKey(int *pressed, uint8_t *doom_key) {
     uint32_t state           = buttons->state;
     uint32_t changed_buttons = state ^ previous_button_state;
     if(changed_buttons == 0) {
-        return 0;
+        return DOOMGENERIC_APP_OK;
     }
 
     for(int button = 0; button < buttons->num; button++) {
@@ -128,7 +124,7 @@ int DG_GetKey(int *pressed, uint8_t *doom_key) {
         }
     }
 
-    return 0;
+    return DOOMGENERIC_APP_OK;
 }
 
 void DG_SleepMs(uint32_t ms) {
@@ -144,12 +140,10 @@ void DG_Init(void) {
         return;
     }
 
-    // BSP LCD
-    BSP_LCD_Init();
-    BSP_LCD_LayerDefaultInit(0, LCD_FB_START_ADDRESS);
-    BSP_LCD_DisplayOn();
-    BSP_LCD_SelectLayer(0);
-    BSP_LCD_Clear(LCD_COLOR_BLACK);
+    int err = init_lcd();
+    if (err != DOOMGENERIC_APP_OK) {
+        LOG_ERROR(TAG, "Failed to init LCD: %d", err);
+    }
 
     // fbPtr points to LCD framebuffer memory
     fbPtr = (void *)LCD_FB_START_ADDRESS;
@@ -162,4 +156,5 @@ doomgeneric_app_cbs_t doomgeneric_app_cbs = {
     .sleep_ms = utils_sleep_ms,
     .check_input_devs = check_input_devs,
     .stretch_frame = doomgeneric_app_stretch_frame,
+    .draw_frame = BSP_DrawFrame,
 };
