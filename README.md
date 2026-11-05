@@ -1,4 +1,4 @@
-# STM32F7508-DK Doom Port
+# STM32F7508-DK Doom Port :feelsgood:
 
 This project is a hardware-accelerated port of [doomgeneric](https://github.com/ozkl/doomgeneric) for the STM32F7508-DK Discovery Board. It leverages the STM32's advanced hardware peripherals—including the DMA2D graphic accelerator, FMC external SDRAM, and SDMMC with DMA to run the classic Doom engine smoothly on a microcontroller.
 

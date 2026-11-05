@@ -43,11 +43,7 @@
 
 // FreeRTOS
 #include "FreeRTOS.h"
-#include "task.h"
 #include "main.h"
-
-// CMSIS OS
-#include "cmsis_os.h"
 
 // Application
 #include "log.h"
@@ -140,7 +136,6 @@ int main(void) {
     MX_CRC_Init();
     MX_DMA2D_Init();
     MX_FMC_Init();
-    MX_I2C1_Init();
     MX_I2C3_Init();
     MX_RTC_Init();
     MX_SAI2_Init();
