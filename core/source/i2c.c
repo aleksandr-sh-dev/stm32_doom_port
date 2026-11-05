@@ -67,7 +67,7 @@ void MX_I2C3_Init(void) {
 void HAL_I2C_MspInit(I2C_HandleTypeDef *i2cHandle) {
     GPIO_InitTypeDef         GPIO_InitStruct     = {0};
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
-    
+
     if(i2cHandle->Instance == I2C3) {
         /** Initializes the peripherals clock
          */

@@ -39,7 +39,7 @@ static bool check_input_devs(void) {
 
 static int init_lcd(void) {
     int res = BSP_LCD_Init();
-    if (res != 0) {
+    if(res != 0) {
         LOG_ERROR(TAG, "Failed to init BSP of LCD: %d", res);
         return DOOMGENERIC_APP_LCD_INIT_ERR;
     }
@@ -57,11 +57,11 @@ int mkdir(const char *path, uint32_t mode) {
 }
 
 int doomgeneric_app_stretch_frame(uint8_t *src, uint8_t *dst) {
-    if (src == NULL) {
+    if(src == NULL) {
         return DOOMGENERIC_APP_NULL_PTR_ERR;
     }
 
-    if (dst == NULL) {
+    if(dst == NULL) {
         return DOOMGENERIC_APP_NULL_PTR_ERR;
     }
 
@@ -141,7 +141,7 @@ void DG_Init(void) {
     }
 
     int err = init_lcd();
-    if (err != DOOMGENERIC_APP_OK) {
+    if(err != DOOMGENERIC_APP_OK) {
         LOG_ERROR(TAG, "Failed to init LCD: %d", err);
     }
 
@@ -152,9 +152,9 @@ void DG_Init(void) {
 }
 
 doomgeneric_app_cbs_t doomgeneric_app_cbs = {
-    .get_ticks_ms = utils_get_ticks_ms,
-    .sleep_ms = utils_sleep_ms,
+    .get_ticks_ms     = utils_get_ticks_ms,
+    .sleep_ms         = utils_sleep_ms,
     .check_input_devs = check_input_devs,
-    .stretch_frame = doomgeneric_app_stretch_frame,
-    .draw_frame = BSP_DrawFrame,
+    .stretch_frame    = doomgeneric_app_stretch_frame,
+    .draw_frame       = BSP_DrawFrame,
 };

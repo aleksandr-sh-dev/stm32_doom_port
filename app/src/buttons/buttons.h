@@ -61,9 +61,9 @@ typedef struct {
 } buttons_t;
 
 typedef enum {
-    BUTTONS_OK           = 0,
-    BUTTONS_ERR_NULL_PTR = 1,
-    BUTTONS_ERR_NO_BTNS  = 2,
+    BUTTONS_OK                  = 0,
+    BUTTONS_ERR_NULL_PTR        = 1,
+    BUTTONS_ERR_NO_BTNS         = 2,
     BUTTONS_ERR_NOT_INITIALIZED = 3,
 } button_err_t;
 
