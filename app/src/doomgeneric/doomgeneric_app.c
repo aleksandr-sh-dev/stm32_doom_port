@@ -1,20 +1,12 @@
-#include <stdint.h>
 #include <stdbool.h>
 
-#include "doomgeneric_callbacks.h"
-
-// FreeRTOS
-#include "FreeRTOS.h"
+#include "doomgeneric_app.h"
 
 // HAL
 #include "stm32f7508_discovery_lcd.h"
 
-// Doomgeneric STM32 application
-#include "doomgeneric_stm32.h"
-
-// Logs
+// App
 #include "log.h"
-
 #include "buttons.h"
 #include "utils.h"
 
@@ -22,21 +14,23 @@
 #include "doomgeneric.h"
 #include "i_video.h"
 
-static const char *TAG = "DOOMGENERIC_CALLBACKS";
+#define DOOM_COLORS_8BIT (256)
+
+static const char *TAG = "DOOMGENERIC_APP";
 
 static uint32_t previous_button_state = 0;
 
-extern struct color colors[256];
-static uint32_t     dma2d_clut[256];
+extern struct color colors[DOOM_COLORS_8BIT];
+static uint32_t     dma2d_clut[DOOM_COLORS_8BIT];
 static uint8_t     *fbPtr;
 extern pixel_t     *DG_ScreenBuffer;
 
 /* Global pointer for the 130 KB scaled frame */
-__ALIGNED_32__ __SDRAM_MEMORY__ static uint8_t stretched_buffer[480 * 272];
+__ALIGNED_32__ __SDRAM_MEMORY__ static uint8_t stretched_buffer[CONFIG_DISPLAY_RES_X * CONFIG_DISPLAY_RES_Y];
 
 /* Fast pre-computed lookup tables */
-static uint16_t x_lut[480];
-static uint16_t y_lut[272];
+static uint16_t x_lut[CONFIG_DISPLAY_RES_X];
+static uint16_t y_lut[CONFIG_DISPLAY_RES_Y];
 static bool     lut_init = false;
 
 static bool check_input_devs(void) {
@@ -47,25 +41,54 @@ int mkdir(const char *path, uint32_t mode) {
     return -1; // Return -1 to indicate directory creation is unsupported
 }
 
-static void stretch_frame_8bit(uint8_t *src, uint8_t *dst) {
+int doomgeneric_app_stretch_frame(uint8_t *src, uint8_t *dst) {
+    if (src == NULL) {
+        return DOOMGENERIC_APP_NULL_PTR;
+    }
+
+    if (dst == NULL) {
+        return DOOMGENERIC_APP_NULL_PTR;
+    }
+
+    // if(!lut_init) {
+    //     for(int x = 0; x < CONFIG_DISPLAY_RES_X; x++) {
+    //         x_lut[x] = (x * DOOMGENERIC_RESX) / CONFIG_DISPLAY_RES_X;
+    //     }
+    //     for(int y = 0; y < CONFIG_DISPLAY_RES_Y; y++) {
+    //         y_lut[y] = ((y * DOOMGENERIC_RESY) / CONFIG_DISPLAY_RES_Y) * DOOMGENERIC_RESX;
+    //     }
+    //     lut_init = true;
+    // }
+
+    // for(int y = 0; y < CONFIG_DISPLAY_RES_Y; y++) {
+    //     uint8_t *src_row = src + y_lut[y];
+    //     uint8_t *dst_row = dst + (y * CONFIG_DISPLAY_RES_X);
+
+    //     for(int x = 0; x < CONFIG_DISPLAY_RES_X; x++) {
+    //         dst_row[x] = src_row[x_lut[x]];
+    //     }
+    // }
+
     if(!lut_init) {
-        for(int x = 0; x < 480; x++) {
-            x_lut[x] = (x * 320) / 480;
+        for(int x = 0; x < CONFIG_DISPLAY_RES_X; x++) {
+            x_lut[x] = (x * DOOMGENERIC_RESX) / CONFIG_DISPLAY_RES_X;
         }
-        for(int y = 0; y < 272; y++) {
-            y_lut[y] = ((y * 200) / 272) * 320;
+        for(int y = 0; y < CONFIG_DISPLAY_RES_Y; y++) {
+            y_lut[y] = ((y * DOOMGENERIC_RESY) / CONFIG_DISPLAY_RES_Y) * DOOMGENERIC_RESX;
         }
         lut_init = true;
     }
 
-    for(int y = 0; y < 272; y++) {
+    for(int y = 0; y < CONFIG_DISPLAY_RES_Y; y++) {
         uint8_t *src_row = src + y_lut[y];
-        uint8_t *dst_row = dst + (y * 480);
+        uint8_t *dst_row = dst + (y * CONFIG_DISPLAY_RES_X);
 
-        for(int x = 0; x < 480; x++) {
+        for(int x = 0; x < CONFIG_DISPLAY_RES_X; x++) {
             dst_row[x] = src_row[x_lut[x]];
         }
     }
+
+    return DOOMGENERIC_APP_OK;
 }
 
 void DG_SetWindowTitle(const char *title) {
@@ -73,15 +96,13 @@ void DG_SetWindowTitle(const char *title) {
 }
 
 void DG_DrawFrame(void) {
-    stretch_frame_8bit((uint8_t *)DG_ScreenBuffer, stretched_buffer);
+    doomgeneric_app_cbs.stretch_frame((uint8_t *)DG_ScreenBuffer, stretched_buffer);
 
-    for(int i = 0; i < 256; i++) {
+    for(int i = 0; i < DOOM_COLORS_8BIT; i++) {
         dma2d_clut[i] = (0xFF << 24) | (colors[i].r << 16) | (colors[i].g << 8) | colors[i].b;
     }
 
-    SCB_CleanDCache_by_Addr((uint32_t *)stretched_buffer, 480 * 272);
-
-    BSP_DrawFrame(stretched_buffer, fbPtr, 480, 272, dma2d_clut);
+    BSP_DrawFrame(stretched_buffer, fbPtr, CONFIG_DISPLAY_RES_X, CONFIG_DISPLAY_RES_Y, dma2d_clut);
 }
 
 int DG_GetKey(int *pressed, uint8_t *doom_key) {
@@ -111,19 +132,15 @@ int DG_GetKey(int *pressed, uint8_t *doom_key) {
 }
 
 void DG_SleepMs(uint32_t ms) {
-    // osDelay(pdMS_TO_TICKS(ms));
-    doomgeneric_cbs.sleep_ms(ms);
+    doomgeneric_app_cbs.sleep_ms(ms);
 }
 
 uint32_t DG_GetTicksMs(void) {
-    // return osKernelGetTickCount();
-    return doomgeneric_cbs.get_ticks_ms();
+    return doomgeneric_app_cbs.get_ticks_ms();
 }
 
 void DG_Init(void) {
-    assert_param(doomgeneric_cbs != NULL);
-
-    if(!doomgeneric_cbs.check_input_devs()) {
+    if(!doomgeneric_app_cbs.check_input_devs()) {
         return;
     }
 
@@ -140,8 +157,9 @@ void DG_Init(void) {
     LOG_DEBUG(TAG, "Width: %d, Height: %d", DOOMGENERIC_RESX, DOOMGENERIC_RESY);
 }
 
-doomgeneric_callbacks_t doomgeneric_cbs = {
+doomgeneric_app_cbs_t doomgeneric_app_cbs = {
     .get_ticks_ms = utils_get_ticks_ms,
     .sleep_ms = utils_sleep_ms,
     .check_input_devs = check_input_devs,
+    .stretch_frame = doomgeneric_app_stretch_frame,
 };

@@ -7,8 +7,8 @@
 // FreeRTOS
 #include "FreeRTOS.h"
 
-// Doomgeneric STM32 application
-#include "doomgeneric_stm32.h"
+// Doomgeneric task
+#include "doomgeneric_task.h"
 
 // Logs
 #include "log.h"
@@ -24,7 +24,7 @@
 #include "z_zone.h"
 #include "i_video.h"
 
-static const char *TAG = "DOOMGENERIC_STM32";
+static const char *TAG = "DOOMGENERIC_TASK";
 
 static osThreadId_t         doomgeneric_task_h;
 static const osThreadAttr_t doomgeneric_task_attributes = {
@@ -63,7 +63,7 @@ void doomgeneric_task(void *arg) {
     osThreadExit();
 }
 
-void doomgeneric_init(void) {
+void doomgeneric_task_init(void) {
     doomgeneric_task_h = osThreadNew(doomgeneric_task, NULL, &doomgeneric_task_attributes);
     configASSERT(doomgeneric_task_h != NULL);
 }

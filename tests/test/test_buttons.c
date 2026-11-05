@@ -4,6 +4,7 @@
 #include "unity.h"
 #include "buttons.h"
 #include "config.h"
+#include "doomgeneric.h"
 
 // Generated automatically by CMock
 #include "mock_stm32f7xx_hal_gpio.h"
@@ -43,6 +44,8 @@ void test_buttons_init_errors(void) {
 
     res = buttons_init(test_bindings, 0);
     TEST_ASSERT_EQUAL_INT(BUTTONS_ERR_NO_BTNS, res);
+
+    TEST_MESSAGE("BUTTONS INIT OK");
 }
 
 void test_buttons_init_and_deinit_success(void) {
@@ -65,6 +68,8 @@ void test_buttons_init_and_deinit_success(void) {
 
     res = buttons_deinit();
     TEST_ASSERT_EQUAL_INT(BUTTONS_OK, res);
+
+    TEST_MESSAGE("BUTTONS INIT AND DEINIT OK");
 }
 
 void test_buttons_check_should_update_state_by_array_index_shift(void) {
@@ -85,4 +90,6 @@ void test_buttons_check_should_update_state_by_array_index_shift(void) {
     /* Verify the state calculation */
     uint32_t expected_state = (1U << 0) | (1U << 2);
     TEST_ASSERT_EQUAL_HEX32(expected_state, buttons_get_state());
+
+    TEST_MESSAGE("BUTTONS STATE UPDATE OK");
 }

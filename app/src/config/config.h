@@ -29,6 +29,9 @@ static const button_binding_t button_default_bindings[] = {
     {"PAUSE",        PAUSE_GPIO_Port,        PAUSE_Pin,        KEY_ESCAPE    },
 };
 
+#define CONFIG_DISPLAY_RES_X (480)
+#define CONFIG_DISPLAY_RES_Y (272)
+
 #define CONFIG_BUTTONS_NUM (sizeof(button_default_bindings) / sizeof(button_default_bindings[0]))
 
 #define SCREEN_LOGGING (1 << 0)

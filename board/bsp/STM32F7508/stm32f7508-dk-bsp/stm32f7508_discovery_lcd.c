@@ -1248,6 +1248,8 @@ void BSP_LCD_FillEllipse(int Xpos, int Ypos, int XRadius, int YRadius)
 
 void BSP_DrawFrame(void *pSrc, void *pDst, uint32_t xSize, uint32_t ySize, uint32_t *pClut) 
 {
+    SCB_CleanDCache_by_Addr((uint32_t *)pSrc, xSize * ySize);
+
     hDma2dHandler.Instance = DMA2D;
     
     /* Memory-to-Memory with Pixel Format Conversion */

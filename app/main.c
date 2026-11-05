@@ -48,7 +48,7 @@
 // Application
 #include "log.h"
 #include "fatfs.h"
-#include "doomgeneric_stm32.h"
+#include "doomgeneric_task.h"
 #include "buttons.h"
 
 /* Private function prototypes -----------------------------------------------*/
@@ -98,7 +98,7 @@ void start_task(void *argument) {
     }
 
     // Init doomgeneric porting framework
-    doomgeneric_init();
+    doomgeneric_task_init();
 
     // Finished initializing all applications, exit this thread
     osThreadExit();

@@ -1,3 +1,3 @@
 target_include_directories(app PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/doomgeneric_stm32.c
-    doomgeneric_callbacks.c)
+target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/doomgeneric_task.c
+    doomgeneric_app.c)
