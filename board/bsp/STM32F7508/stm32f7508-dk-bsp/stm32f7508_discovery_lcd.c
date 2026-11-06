@@ -1248,8 +1248,7 @@ void BSP_LCD_FillEllipse(int Xpos, int Ypos, int XRadius, int YRadius)
 
 void BSP_DrawFrame(void *pSrc, void *pDst, uint32_t xSize, uint32_t ySize, uint32_t *pClut) 
 {
-    /* Ensure DMA2D clock is on */
-    __HAL_RCC_DMA2D_CLK_ENABLE();
+    SCB_CleanDCache_by_Addr((uint32_t *)pSrc, xSize * ySize);
 
     hDma2dHandler.Instance = DMA2D;
     

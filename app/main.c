@@ -43,16 +43,12 @@
 
 // FreeRTOS
 #include "FreeRTOS.h"
-#include "task.h"
 #include "main.h"
-
-// CMSIS OS
-#include "cmsis_os.h"
 
 // Application
 #include "log.h"
 #include "fatfs.h"
-#include "doomgeneric_stm32.h"
+#include "doomgeneric_task.h"
 #include "buttons.h"
 
 /* Private function prototypes -----------------------------------------------*/
@@ -102,7 +98,7 @@ void start_task(void *argument) {
     }
 
     // Init doomgeneric porting framework
-    doomgeneric_init();
+    doomgeneric_task_init();
 
     // Finished initializing all applications, exit this thread
     osThreadExit();
@@ -140,7 +136,6 @@ int main(void) {
     MX_CRC_Init();
     MX_DMA2D_Init();
     MX_FMC_Init();
-    MX_I2C1_Init();
     MX_I2C3_Init();
     MX_RTC_Init();
     MX_SAI2_Init();

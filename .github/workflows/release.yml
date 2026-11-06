@@ -20,9 +20,14 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends git cmake ninja-build \
-            gcc-arm-none-eabi libnewlib-arm-none-eabi xz-utils
+          sudo apt update
+          sudo apt install -y --no-install-recommends git cmake ninja-build \
+            gcc-arm-none-eabi libnewlib-arm-none-eabi ruby gdb
+          sudo gem install ceedling --no-document
+
+      - name: Run Unit Tests
+        working-directory: workspace/stm32_doom_port/tests
+        run: ceedling test:all
 
       - name: Build Bootloader
         working-directory: workspace/stm32_doom_port

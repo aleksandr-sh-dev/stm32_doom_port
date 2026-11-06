@@ -94,6 +94,17 @@
                 "clear": true
             }
         },
+        {
+            "label": "Perform Unit Testing",
+            "type": "shell",
+            "command": "cd tests && ceedling test:all",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": false
+            }
+        },
         // HIDDEN INTERNAL TASKS
         {
             "label": "CMake: Debug",

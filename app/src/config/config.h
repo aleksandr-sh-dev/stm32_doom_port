@@ -5,7 +5,6 @@
 
 // Project includes
 #include "buttons.h"
-#include "log.h"
 
 // Buttons default binding
 static const button_binding_t button_default_bindings[] = {
@@ -29,6 +28,9 @@ static const button_binding_t button_default_bindings[] = {
     {"AUTOMAP",      AUTOMAP_GPIO_Port,      AUTOMAP_Pin,      KEY_TAB       },
     {"PAUSE",        PAUSE_GPIO_Port,        PAUSE_Pin,        KEY_ESCAPE    },
 };
+
+#define CONFIG_DISPLAY_RES_X (480)
+#define CONFIG_DISPLAY_RES_Y (272)
 
 #define CONFIG_BUTTONS_NUM (sizeof(button_default_bindings) / sizeof(button_default_bindings[0]))
 

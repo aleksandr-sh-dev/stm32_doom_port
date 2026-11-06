@@ -1,12 +1,6 @@
 #include "buttons.h"
 #include "log.h"
 
-typedef enum {
-    BUTTONS_OK           = 0,
-    BUTTONS_ERR_NULL_PTR = 1,
-    BUTTONS_ERR_NO_BTNS  = 2,
-} button_err_t;
-
 static buttons_t buttons = {
     .bindings = NULL,
     .state    = 0,
@@ -84,10 +78,10 @@ int buttons_init(const button_binding_t *bindings, uint8_t buttons_num) {
     return BUTTONS_OK;
 }
 
-void buttons_deinit(void) {
+int buttons_deinit(void) {
     if(!buttons.initialized) {
         LOG_WARN(TAG, "Buttons were not initialized");
-        return;
+        return BUTTONS_ERR_NOT_INITIALIZED;
     }
 
     for(uint8_t i = 0; i < buttons.num; i++) {
@@ -101,4 +95,6 @@ void buttons_deinit(void) {
     buttons.state       = 0;
 
     LOG_INFO(TAG, "Buttons deinitialized");
+
+    return BUTTONS_OK;
 }

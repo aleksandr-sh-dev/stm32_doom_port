@@ -1,25 +1,46 @@
-# STM32F7508-DK Doom Port
+# STM32F7508-DK Doom Port :feelsgood:
 
 This project is a hardware-accelerated port of [doomgeneric](https://github.com/ozkl/doomgeneric) for the STM32F7508-DK Discovery Board. It leverages the STM32's advanced hardware peripherals—including the DMA2D graphic accelerator, FMC external SDRAM, and SDMMC with DMA to run the classic Doom engine smoothly on a microcontroller.
 
 https://github.com/user-attachments/assets/e0355555-e895-42bd-9704-132b6425685e
+
+## Table of Contents
+
+- [Documentation Index](#documentation-index)
+- [Prerequisites](#prerequisites)
+    - [Ubuntu / Debian](#ubuntu--debian-apt)
+    - [Arch Linux](#arch-linux-pacman)
+    - [MacOS](#macos-brew)
+- [Hardware Requirements](#hardware-requirements)
+- [Key Features](#key-features)
+- [Getting Started](#getting-started-linux)
+    - [Bootloader](#bootloader)
+    - [Debug Firmware](#debug-firmware)
+    - [SD Card Setup](#sd-card-setup)
+- [Technical Notes](#technical-notes)
+- [Acknowledgments](#acknowledgments)
+
+## Documentation Index
+
+- [Controls](docs/controls/controls.md)
+- [Tests](docs/tests/tests.md)
 
 ## Prerequisites
 
 ### Ubuntu / Debian (`apt`)
 ```bash
 sudo apt update
-sudo apt install cmake ninja-build gcc-arm-none-eabi libnewlib-arm-none-eabi git stlink-tools clang-format
+sudo apt install cmake ninja-build gcc-arm-none-eabi libnewlib-arm-none-eabi git stlink-tools clang-format ruby
 ```
 
 ### Arch Linux (`pacman`)
 ```bash
-sudo pacman -S cmake ninja arm-none-eabi-gcc arm-none-eabi-newlib git stlink clang-format
+sudo pacman -S cmake ninja arm-none-eabi-gcc arm-none-eabi-newlib git stlink clang-format ruby
 ```
 
 ### macOS (`brew`)
 ```bash
-brew install cmake ninja arm-none-eabi-gcc git stlink clang-format
+brew install cmake ninja arm-none-eabi-gcc git stlink clang-format ruby
 ```
 
 ### Windows (**TBD**)
@@ -93,12 +114,6 @@ The Doom engine requires a game data file (`.wad`) to run.
 1. Format a MicroSD card to **FAT32**.
 2. Place a valid Doom WAD file (e.g., `doom1.wad` for shareware Doom) directly into the root directory of the SD card.
 3. Insert the SD card into the STM32F7508-DK.
-
-### Controls & Wiring
-The port uses standard tactile buttons wired directly between specific GPIO pins and Ground (GND). No external resistors are needed, as the project initializes the pins with internal pull-ups.
-
-For the exact wiring diagram, pinouts, and in-game key mappings, please refer to the dedicated controls documentation:
-👉 **[Controls & Key Mapping](docs/controls/controls.md)**
 
 ## Technical Notes
 
