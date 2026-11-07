@@ -5,6 +5,7 @@
 
 // Project includes
 #include "buttons.h"
+#include "audio_app.h"
 
 // Buttons default binding
 static const button_binding_t button_default_bindings[] = {
@@ -46,3 +47,7 @@ static const button_binding_t button_default_bindings[] = {
 
 // SDRAM
 #define CONFIG_USE_SDRAM_MEMORY
+
+// AUDIO
+#define CONFIG_AUDIO_OUTPUT_DEVICE  (AUDIO_APP_OUTPUT_BOTH)
+#define CONFIG_AUDIO_DEFAULT_VOLUME (10)
