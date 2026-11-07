@@ -1,6 +1,7 @@
 #include <stdbool.h>
 
 #include "doomgeneric_app.h"
+#include "doomgeneric_audio.h"
 
 // HAL
 #include "stm32f7508_discovery_lcd.h"
@@ -9,12 +10,14 @@
 #include "log.h"
 #include "buttons.h"
 #include "utils.h"
+#include "audio_app.h"
 
 // Doomgeneric lib
 #include "doomgeneric.h"
 #include "i_video.h"
 
-#define DOOM_COLORS_8BIT (256)
+#define AUDIO_BUFFER_SAMPLES (4096)
+#define DOOM_COLORS_8BIT     (256)
 
 static const char *TAG = "DOOMGENERIC_APP";
 
@@ -24,6 +27,8 @@ extern struct color colors[DOOM_COLORS_8BIT];
 static uint32_t     dma2d_clut[DOOM_COLORS_8BIT];
 static uint8_t     *fbPtr;
 extern pixel_t     *DG_ScreenBuffer;
+
+__ALIGNED_32__ __SDRAM_MEMORY__ static uint16_t audio_buffer[AUDIO_BUFFER_SAMPLES];
 
 /* Global pointer for the 130 KB scaled frame */
 __ALIGNED_32__ __SDRAM_MEMORY__ static uint8_t stretched_buffer[CONFIG_DISPLAY_RES_X * CONFIG_DISPLAY_RES_Y];
@@ -140,15 +145,31 @@ void DG_Init(void) {
         return;
     }
 
-    int err = init_lcd();
-    if(err != DOOMGENERIC_APP_OK) {
-        LOG_ERROR(TAG, "Failed to init LCD: %d", err);
+    int res = init_lcd();
+    if(res != DOOMGENERIC_APP_OK) {
+        LOG_ERROR(TAG, "Failed to init LCD: %d", res);
     }
 
     // fbPtr points to LCD framebuffer memory
     fbPtr = (void *)LCD_FB_START_ADDRESS;
 
+    // Start audio
+    res = DG_AudioStart(audio_buffer, AUDIO_BUFFER_SAMPLES);
+    if(res != AUDIO_APP_OK) {
+        LOG_ERROR(TAG, "Faield to start audio: %d", res);
+    }
+
     LOG_DEBUG(TAG, "Width: %d, Height: %d", DOOMGENERIC_RESX, DOOMGENERIC_RESY);
+}
+
+void BSP_AUDIO_OUT_HalfTransfer_CallBack(void) {
+    /* Refill the first half of the array */
+    DG_FillAudioBuffer(&audio_buffer[0], AUDIO_BUFFER_SAMPLES / 2);
+}
+
+void BSP_AUDIO_OUT_TransferComplete_CallBack(void) {
+    /* Refill the second half of the array */
+    DG_FillAudioBuffer(&audio_buffer[AUDIO_BUFFER_SAMPLES / 2], AUDIO_BUFFER_SAMPLES / 2);
 }
 
 doomgeneric_app_cbs_t doomgeneric_app_cbs = {
