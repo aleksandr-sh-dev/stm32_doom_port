@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file   fatfs.c
@@ -15,7 +14,7 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
+
 #include "fatfs.h"
 #include "utils.h"
 
@@ -23,10 +22,6 @@ uint8_t              retSD;     /* Return value for SD */
 __ALIGNED_32__ char  SDPath[4]; /* SD logical drive path */
 __ALIGNED_32__ FATFS SDFatFS;   /* File system object for SD logical drive */
 __ALIGNED_32__ FIL   SDFile;    /* File object for SD */
-
-/* USER CODE BEGIN Variables */
-
-/* USER CODE END Variables */
 
 void MX_FATFS_Init(void) {
     /*## FatFS: Link the SD driver ###########################*/
@@ -39,11 +34,5 @@ void MX_FATFS_Init(void) {
  * @retval Time in DWORD
  */
 DWORD get_fattime(void) {
-    /* USER CODE BEGIN get_fattime */
     return 0;
-    /* USER CODE END get_fattime */
 }
-
-/* USER CODE BEGIN Application */
-
-/* USER CODE END Application */

@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file    usb_otg.c
@@ -16,40 +15,18 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "usb_otg.h"
-
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 PCD_HandleTypeDef hpcd_USB_OTG_HS;
 
 /* USB_OTG_FS init function */
-
 void MX_USB_OTG_FS_USB_Init(void) {
-    /* USER CODE BEGIN USB_OTG_FS_Init 0 */
-
-    /* USER CODE END USB_OTG_FS_Init 0 */
-
-    /* USER CODE BEGIN USB_OTG_FS_Init 1 */
-
-    /* USER CODE END USB_OTG_FS_Init 1 */
-    /* USER CODE BEGIN USB_OTG_FS_Init 2 */
-
-    /* USER CODE END USB_OTG_FS_Init 2 */
 }
 /* USB_OTG_HS init function */
 
 void MX_USB_OTG_HS_PCD_Init(void) {
-    /* USER CODE BEGIN USB_OTG_HS_Init 0 */
-
-    /* USER CODE END USB_OTG_HS_Init 0 */
-
-    /* USER CODE BEGIN USB_OTG_HS_Init 1 */
-
-    /* USER CODE END USB_OTG_HS_Init 1 */
     hpcd_USB_OTG_HS.Instance                 = USB_OTG_HS;
     hpcd_USB_OTG_HS.Init.dev_endpoints       = 8;
     hpcd_USB_OTG_HS.Init.speed               = PCD_SPEED_HIGH;
@@ -64,18 +41,11 @@ void MX_USB_OTG_HS_PCD_Init(void) {
     if(HAL_PCD_Init(&hpcd_USB_OTG_HS) != HAL_OK) {
         Error_Handler();
     }
-    /* USER CODE BEGIN USB_OTG_HS_Init 2 */
-
-    /* USER CODE END USB_OTG_HS_Init 2 */
 }
 
 void HAL_PCD_MspInit(PCD_HandleTypeDef *pcdHandle) {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     if(pcdHandle->Instance == USB_OTG_HS) {
-        /* USER CODE BEGIN USB_OTG_HS_MspInit 0 */
-
-        /* USER CODE END USB_OTG_HS_MspInit 0 */
-
         __HAL_RCC_GPIOB_CLK_ENABLE();
         __HAL_RCC_GPIOI_CLK_ENABLE();
         __HAL_RCC_GPIOH_CLK_ENABLE();
@@ -134,17 +104,11 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef *pcdHandle) {
         /* USB_OTG_HS clock enable */
         __HAL_RCC_USB_OTG_HS_CLK_ENABLE();
         __HAL_RCC_USB_OTG_HS_ULPI_CLK_ENABLE();
-        /* USER CODE BEGIN USB_OTG_HS_MspInit 1 */
-
-        /* USER CODE END USB_OTG_HS_MspInit 1 */
     }
 }
 
 void HAL_PCD_MspDeInit(PCD_HandleTypeDef *pcdHandle) {
     if(pcdHandle->Instance == USB_OTG_HS) {
-        /* USER CODE BEGIN USB_OTG_HS_MspDeInit 0 */
-
-        /* USER CODE END USB_OTG_HS_MspDeInit 0 */
         /* Peripheral clock disable */
         __HAL_RCC_USB_OTG_HS_CLK_DISABLE();
         __HAL_RCC_USB_OTG_HS_ULPI_CLK_DISABLE();
@@ -165,21 +129,9 @@ void HAL_PCD_MspDeInit(PCD_HandleTypeDef *pcdHandle) {
         */
         HAL_GPIO_DeInit(GPIOB,
                         GPIO_PIN_5 | GPIO_PIN_13 | GPIO_PIN_12 | ULPI_D3_Pin | GPIO_PIN_1 | GPIO_PIN_0 | GPIO_PIN_11);
-
         HAL_GPIO_DeInit(GPIOI, GPIO_PIN_11);
-
         HAL_GPIO_DeInit(GPIOH, GPIO_PIN_4);
-
         HAL_GPIO_DeInit(GPIOC, GPIO_PIN_0);
-
         HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5 | GPIO_PIN_3);
-
-        /* USER CODE BEGIN USB_OTG_HS_MspDeInit 1 */
-
-        /* USER CODE END USB_OTG_HS_MspDeInit 1 */
     }
 }
-
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */

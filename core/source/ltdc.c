@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file    ltdc.c
@@ -16,27 +15,16 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ltdc.h"
-
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 LTDC_HandleTypeDef hltdc;
 
 /* LTDC init function */
 void MX_LTDC_Init(void) {
-    /* USER CODE BEGIN LTDC_Init 0 */
-
-    /* USER CODE END LTDC_Init 0 */
-
     LTDC_LayerCfgTypeDef pLayerCfg = {0};
-
-    /* USER CODE BEGIN LTDC_Init 1 */
-
-    /* USER CODE END LTDC_Init 1 */
+    
     hltdc.Instance                = LTDC;
     hltdc.Init.HSPolarity         = LTDC_HSPOLARITY_AL;
     hltdc.Init.VSPolarity         = LTDC_VSPOLARITY_AL;
@@ -74,17 +62,11 @@ void MX_LTDC_Init(void) {
     if(HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0) != HAL_OK) {
         Error_Handler();
     }
-    /* USER CODE BEGIN LTDC_Init 2 */
-
-    /* USER CODE END LTDC_Init 2 */
 }
 
 void HAL_LTDC_MspInit(LTDC_HandleTypeDef *ltdcHandle) {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     if(ltdcHandle->Instance == LTDC) {
-        /* USER CODE BEGIN LTDC_MspInit 0 */
-
-        /* USER CODE END LTDC_MspInit 0 */
         /* LTDC clock enable */
         __HAL_RCC_LTDC_CLK_ENABLE();
 
@@ -163,17 +145,11 @@ void HAL_LTDC_MspInit(LTDC_HandleTypeDef *ltdcHandle) {
         /* LTDC interrupt Init */
         HAL_NVIC_SetPriority(LTDC_IRQn, 5, 0);
         HAL_NVIC_EnableIRQ(LTDC_IRQn);
-        /* USER CODE BEGIN LTDC_MspInit 1 */
-
-        /* USER CODE END LTDC_MspInit 1 */
     }
 }
 
 void HAL_LTDC_MspDeInit(LTDC_HandleTypeDef *ltdcHandle) {
     if(ltdcHandle->Instance == LTDC) {
-        /* USER CODE BEGIN LTDC_MspDeInit 0 */
-
-        /* USER CODE END LTDC_MspDeInit 0 */
         /* Peripheral clock disable */
         __HAL_RCC_LTDC_CLK_DISABLE();
 
@@ -208,27 +184,16 @@ void HAL_LTDC_MspDeInit(LTDC_HandleTypeDef *ltdcHandle) {
         PJ1     ------> LTDC_R2
         */
         HAL_GPIO_DeInit(LCD_B0_GPIO_Port, LCD_B0_Pin);
-
         HAL_GPIO_DeInit(GPIOJ,
                         LCD_B1_Pin | LCD_B2_Pin | LCD_B3_Pin | LCD_G4_Pin | LCD_G1_Pin | LCD_G3_Pin | LCD_G0_Pin |
                             LCD_G2_Pin | LCD_R7_Pin | LCD_R5_Pin | LCD_R6_Pin | LCD_R4_Pin | LCD_R3_Pin | LCD_R1_Pin |
                             LCD_R2_Pin);
-
         HAL_GPIO_DeInit(GPIOK,
                         LCD_DE_Pin | LCD_B7_Pin | LCD_B6_Pin | LCD_B5_Pin | LCD_G6_Pin | LCD_G7_Pin | LCD_G5_Pin);
-
         HAL_GPIO_DeInit(LCD_B4_GPIO_Port, LCD_B4_Pin);
-
         HAL_GPIO_DeInit(GPIOI, LCD_HSYNC_Pin | LCD_VSYNC_Pin | LCD_R0_Pin | LCD_CLK_Pin);
 
         /* LTDC interrupt Deinit */
         HAL_NVIC_DisableIRQ(LTDC_IRQn);
-        /* USER CODE BEGIN LTDC_MspDeInit 1 */
-
-        /* USER CODE END LTDC_MspDeInit 1 */
     }
 }
-
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */

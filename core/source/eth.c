@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file    eth.c
@@ -16,7 +15,7 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "eth.h"
 #include "string.h"
@@ -44,23 +43,11 @@ ETH_DMADescTypeDef DMATxDscrTab[ETH_TX_DESC_CNT]
 ETH_BufferTypeDef  Txbuffer[ETH_TX_DESC_CNT * 2U];
 ETH_TxPacketConfig TxConfig;
 
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
 ETH_HandleTypeDef heth;
 
 /* ETH init function */
 void MX_ETH_Init(void) {
-    /* USER CODE BEGIN ETH_Init 0 */
-
-    /* USER CODE END ETH_Init 0 */
-
     static uint8_t MACAddr[6];
-
-    /* USER CODE BEGIN ETH_Init 1 */
-
-    /* USER CODE END ETH_Init 1 */
     heth.Instance            = ETH;
     MACAddr[0]               = 0x00;
     MACAddr[1]               = 0x80;
@@ -74,10 +61,6 @@ void MX_ETH_Init(void) {
     heth.Init.RxDesc         = DMARxDscrTab;
     heth.Init.RxBuffLen      = 1524;
 
-    /* USER CODE BEGIN MACADDRESS */
-
-    /* USER CODE END MACADDRESS */
-
     if(HAL_ETH_Init(&heth) != HAL_OK) {
         Error_Handler();
     }
@@ -86,17 +69,11 @@ void MX_ETH_Init(void) {
     TxConfig.Attributes   = ETH_TX_PACKETS_FEATURES_CSUM | ETH_TX_PACKETS_FEATURES_CRCPAD;
     TxConfig.ChecksumCtrl = ETH_CHECKSUM_IPHDR_PAYLOAD_INSERT_PHDR_CALC;
     TxConfig.CRCPadCtrl   = ETH_CRC_PAD_INSERT;
-    /* USER CODE BEGIN ETH_Init 2 */
-
-    /* USER CODE END ETH_Init 2 */
 }
 
 void HAL_ETH_MspInit(ETH_HandleTypeDef *ethHandle) {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     if(ethHandle->Instance == ETH) {
-        /* USER CODE BEGIN ETH_MspInit 0 */
-
-        /* USER CODE END ETH_MspInit 0 */
         /* ETH clock enable */
         __HAL_RCC_ETH_CLK_ENABLE();
 
@@ -134,18 +111,11 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *ethHandle) {
         GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
         GPIO_InitStruct.Alternate = GPIO_AF11_ETH;
         HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-        /* USER CODE BEGIN ETH_MspInit 1 */
-
-        /* USER CODE END ETH_MspInit 1 */
     }
 }
 
 void HAL_ETH_MspDeInit(ETH_HandleTypeDef *ethHandle) {
     if(ethHandle->Instance == ETH) {
-        /* USER CODE BEGIN ETH_MspDeInit 0 */
-
-        /* USER CODE END ETH_MspDeInit 0 */
         /* Peripheral clock disable */
         __HAL_RCC_ETH_CLK_DISABLE();
 
@@ -161,17 +131,7 @@ void HAL_ETH_MspDeInit(ETH_HandleTypeDef *ethHandle) {
         PA7     ------> ETH_CRS_DV
         */
         HAL_GPIO_DeInit(GPIOG, RMII_TXD1_Pin | RMII_TXD0_Pin | RMII_TX_EN_Pin);
-
         HAL_GPIO_DeInit(GPIOC, RMII_MDC_Pin | RMII_RXD0_Pin | RMII_RXD1_Pin);
-
         HAL_GPIO_DeInit(GPIOA, RMII_REF_CLK_Pin | RMII_MDIO_Pin | RMII_CRS_DV_Pin);
-
-        /* USER CODE BEGIN ETH_MspDeInit 1 */
-
-        /* USER CODE END ETH_MspDeInit 1 */
     }
 }
-
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */

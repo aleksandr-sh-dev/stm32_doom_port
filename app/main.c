@@ -18,7 +18,6 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "crc.h"
-#include "dcmi.h"
 #include "dma2d.h"
 #include "eth.h"
 #include "i2c.h"
@@ -27,7 +26,6 @@
 #include "rtc.h"
 #include "sai.h"
 #include "spdifrx.h"
-#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "usb_otg.h"
@@ -73,10 +71,13 @@ void start_task(void *argument) {
     UNUSED(argument);
 
     // Init logging
-    log_init();
+    int res = log_init();
+    if(res != LOG_OK) {
+        configASSERT(0);
+    }
 
     // Init buttons
-    int res = buttons_init(button_default_bindings, CONFIG_BUTTONS_NUM);
+    res = buttons_init(button_default_bindings, CONFIG_BUTTONS_NUM);
     if(res != BUTTONS_OK) {
         LOG_ERROR(TAG, "Failed to initialize buttons: (%d)", res);
         configASSERT(0);
@@ -109,6 +110,27 @@ void start_task(void *argument) {
     osThreadExit();
 }
 
+static void mx_init(void) {
+    /* Initialize all configured peripherals */
+    MX_GPIO_Init();
+    MX_CRC_Init();
+    MX_DMA2D_Init();
+    MX_FMC_Init();
+    MX_I2C3_Init();
+    MX_RTC_Init();
+    MX_SAI2_Init();
+    MX_SPDIFRX_Init();
+    MX_TIM1_Init();
+    MX_TIM2_Init();
+    MX_TIM3_Init();
+    MX_TIM8_Init();
+    MX_TIM12_Init();
+    MX_USART1_UART_Init();
+    MX_USART6_UART_Init();
+    MX_USB_OTG_FS_USB_Init();
+    MX_USB_OTG_HS_PCD_Init();
+}
+
 /**
  * @brief  The application entry point.
  * @retval int
@@ -134,24 +156,7 @@ int main(void) {
     /* Configure the peripherals common clocks */
     PeriphCommonClock_Config();
 
-    /* Initialize all configured peripherals */
-    MX_GPIO_Init();
-    MX_CRC_Init();
-    MX_DMA2D_Init();
-    MX_FMC_Init();
-    MX_I2C3_Init();
-    MX_RTC_Init();
-    MX_SAI2_Init();
-    MX_SPDIFRX_Init();
-    MX_TIM1_Init();
-    MX_TIM2_Init();
-    MX_TIM3_Init();
-    MX_TIM8_Init();
-    MX_TIM12_Init();
-    MX_USART1_UART_Init();
-    MX_USART6_UART_Init();
-    MX_USB_OTG_FS_USB_Init();
-    MX_USB_OTG_HS_PCD_Init();
+    mx_init();
 
     // BSP
     BSP_SDRAM_Init();

@@ -27,9 +27,7 @@ set(MX_Include_Dirs
 set(MX_Application_Src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../app/main.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/gpio.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/freertos.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/crc.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/dcmi.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/dma2d.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/eth.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/fmc.c
@@ -39,7 +37,6 @@ set(MX_Application_Src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/rtc.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/sai.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/spdifrx.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/spi.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/tim.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/usart.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/source/usb_otg.c

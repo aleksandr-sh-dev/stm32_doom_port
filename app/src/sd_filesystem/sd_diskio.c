@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file    sd_diskio.c
@@ -15,14 +14,9 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
 
 /* Note: code generation based on sd_diskio_dma_rtos_template_bspv1.c v2.1.4
    as FreeRTOS is enabled. */
-
-/* USER CODE BEGIN firstSection */
-/* can be used to modify / undefine following code or add new definitions */
-/* USER CODE END firstSection*/
 
 /* Includes ------------------------------------------------------------------*/
 #include "ff_gen_drv.h"
@@ -66,9 +60,6 @@ See BSP_SD_ErrorCallback() and BSP_SD_AbortCallback() below
  * the BSP_SD_Init() call in the SD_Initialize() and add a call to
  * BSP_SD_Init() elsewhere in the application.
  */
-/* USER CODE BEGIN disableSDInit */
-/* #define DISABLE_SD_INIT */
-/* USER CODE END disableSDInit */
 
 /*
  * when using cacheable memory region, it may be needed to maintain the cache
@@ -76,18 +67,14 @@ See BSP_SD_ErrorCallback() and BSP_SD_AbortCallback() below
  * read and write operation.
  * Notice: This is applicable only for cortex M7 based platform.
  */
-/* USER CODE BEGIN enableSDDmaCacheMaintenance */
 #define ENABLE_SD_DMA_CACHE_MAINTENANCE CONFIG_ENABLE_SD_DMA_CACHE_MAINTENANCE
-/* USER CODE END enableSDDmaCacheMaintenance */
 
 /*
  * Some DMA requires 4-Byte aligned address buffer to correctly read/write data,
  * in FatFs some accesses aren't thus we need a 4-byte aligned scratch buffer to correctly
  * transfer data
  */
-/* USER CODE BEGIN enableScratchBuffer */
 /* #define ENABLE_SCRATCH_BUFFER */
-/* USER CODE END enableScratchBuffer */
 
 /* Private variables ---------------------------------------------------------*/
 #if defined(ENABLE_SCRATCH_BUFFER)
@@ -129,10 +116,6 @@ const Diskio_drvTypeDef SD_Driver = {
     SD_ioctl,
 #endif /* _USE_IOCTL == 1 */
 };
-
-/* USER CODE BEGIN beforeFunctionSection */
-/* can be used to modify / undefine following code or add new code */
-/* USER CODE END beforeFunctionSection */
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -226,9 +209,6 @@ DSTATUS SD_status(BYTE lun) {
     return SD_CheckStatus(lun);
 }
 
-/* USER CODE BEGIN beforeReadSection */
-/* can be used to modify previous code / undefine following code / add new code */
-/* USER CODE END beforeReadSection */
 /**
  * @brief  Reads Sector(s)
  * @param  lun : not used
@@ -374,9 +354,6 @@ DRESULT SD_read(BYTE lun, BYTE *buff, DWORD sector, UINT count) {
     return res;
 }
 
-/* USER CODE BEGIN beforeWriteSection */
-/* can be used to modify previous code / undefine following code / add new code */
-/* USER CODE END beforeWriteSection */
 /**
  * @brief  Writes Sector(s)
  * @param  lun : not used
@@ -523,9 +500,6 @@ DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count) {
 }
 #endif /* _USE_WRITE == 1 */
 
-/* USER CODE BEGIN beforeIoctlSection */
-/* can be used to modify previous code / undefine following code / add new code */
-/* USER CODE END beforeIoctlSection */
 /**
  * @brief  I/O control operation
  * @param  lun : not used
@@ -576,13 +550,6 @@ DRESULT SD_ioctl(BYTE lun, BYTE cmd, void *buff) {
 }
 #endif /* _USE_IOCTL == 1 */
 
-/* USER CODE BEGIN afterIoctlSection */
-/* can be used to modify previous code / undefine following code / add new code */
-/* USER CODE END afterIoctlSection */
-
-/* USER CODE BEGIN callbackSection */
-/* can be used to modify / following code or add new code */
-/* USER CODE END callbackSection */
 /**
  * @brief Tx Transfer completed callbacks
  * @param hsd: SD handle
@@ -619,7 +586,6 @@ void BSP_SD_ReadCpltCallback(void) {
 #endif
 }
 
-/* USER CODE BEGIN ErrorAbortCallbacks */
 /*
 void BSP_SD_AbortCallback(void)
 {
@@ -631,8 +597,3 @@ void BSP_SD_AbortCallback(void)
 #endif
 }
 */
-/* USER CODE END ErrorAbortCallbacks */
-
-/* USER CODE BEGIN lastSection */
-/* can be used to modify / undefine previous code or add new code */
-/* USER CODE END lastSection */

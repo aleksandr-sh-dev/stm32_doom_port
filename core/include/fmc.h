@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * File Name          : FMC.h
@@ -16,7 +15,7 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __FMC_H
 #define __FMC_H
@@ -27,33 +26,13 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
 extern SDRAM_HandleTypeDef hsdram1;
-
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
 
 void MX_FMC_Init(void);
 void HAL_SDRAM_MspInit(SDRAM_HandleTypeDef *hsdram);
 void HAL_SDRAM_MspDeInit(SDRAM_HandleTypeDef *hsdram);
 
-/* USER CODE BEGIN Prototypes */
-
-/* USER CODE END Prototypes */
-
 #ifdef __cplusplus
 }
 #endif
 #endif /*__FMC_H */
-
-/**
- * @}
- */
-
-/**
- * @}
- */

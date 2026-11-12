@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file    rtc.c
@@ -16,29 +15,18 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "rtc.h"
-
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 RTC_HandleTypeDef hrtc;
 
 /* RTC init function */
 void MX_RTC_Init(void) {
-    /* USER CODE BEGIN RTC_Init 0 */
-
-    /* USER CODE END RTC_Init 0 */
 
     RTC_TimeTypeDef  sTime  = {0};
     RTC_DateTypeDef  sDate  = {0};
     RTC_AlarmTypeDef sAlarm = {0};
-
-    /* USER CODE BEGIN RTC_Init 1 */
-
-    /* USER CODE END RTC_Init 1 */
 
     /** Initialize RTC Only
      */
@@ -52,10 +40,6 @@ void MX_RTC_Init(void) {
     if(HAL_RTC_Init(&hrtc) != HAL_OK) {
         Error_Handler();
     }
-
-    /* USER CODE BEGIN Check_RTC_BKUP */
-
-    /* USER CODE END Check_RTC_BKUP */
 
     /** Initialize RTC and set the Time and Date
      */
@@ -104,18 +88,11 @@ void MX_RTC_Init(void) {
     if(HAL_RTCEx_SetTimeStamp(&hrtc, RTC_TIMESTAMPEDGE_RISING, RTC_TIMESTAMPPIN_POS1) != HAL_OK) {
         Error_Handler();
     }
-    /* USER CODE BEGIN RTC_Init 2 */
-
-    /* USER CODE END RTC_Init 2 */
 }
 
 void HAL_RTC_MspInit(RTC_HandleTypeDef *rtcHandle) {
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
     if(rtcHandle->Instance == RTC) {
-        /* USER CODE BEGIN RTC_MspInit 0 */
-
-        /* USER CODE END RTC_MspInit 0 */
-
         /** Initializes the peripherals clock
          */
         PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
@@ -126,25 +103,12 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef *rtcHandle) {
 
         /* RTC clock enable */
         __HAL_RCC_RTC_ENABLE();
-        /* USER CODE BEGIN RTC_MspInit 1 */
-
-        /* USER CODE END RTC_MspInit 1 */
     }
 }
 
 void HAL_RTC_MspDeInit(RTC_HandleTypeDef *rtcHandle) {
     if(rtcHandle->Instance == RTC) {
-        /* USER CODE BEGIN RTC_MspDeInit 0 */
-
-        /* USER CODE END RTC_MspDeInit 0 */
         /* Peripheral clock disable */
         __HAL_RCC_RTC_DISABLE();
-        /* USER CODE BEGIN RTC_MspDeInit 1 */
-
-        /* USER CODE END RTC_MspDeInit 1 */
     }
 }
-
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */

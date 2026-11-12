@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * File Name          : SAI.c
@@ -16,32 +15,15 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
 #include "sai.h"
-
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 SAI_HandleTypeDef hsai_BlockA2;
 SAI_HandleTypeDef hsai_BlockB2;
 
 /* SAI2 init function */
 void MX_SAI2_Init(void) {
-    /* USER CODE BEGIN SAI2_Init 0 */
-
-    /* USER CODE END SAI2_Init 0 */
-
-    /* USER CODE BEGIN SAI2_Init 1 */
-
-    /* USER CODE END SAI2_Init 1 */
-
-    /* USER CODE BEGIN SAI2_Init 1 */
-
-    /* USER CODE END SAI2_Init 1 */
-
     hsai_BlockA2.Instance                    = SAI2_Block_A;
     hsai_BlockA2.Init.Protocol               = SAI_FREE_PROTOCOL;
     hsai_BlockA2.Init.AudioMode              = SAI_MODEMASTER_TX;
@@ -94,9 +76,6 @@ void MX_SAI2_Init(void) {
     if(HAL_SAI_Init(&hsai_BlockB2) != HAL_OK) {
         Error_Handler();
     }
-    /* USER CODE BEGIN SAI2_Init 2 */
-
-    /* USER CODE END SAI2_Init 2 */
 }
 static uint32_t SAI2_client = 0;
 
@@ -172,11 +151,3 @@ void HAL_SAI_MspDeInit(SAI_HandleTypeDef *saiHandle) {
         HAL_GPIO_DeInit(SAI2_SDB_GPIO_Port, SAI2_SDB_Pin);
     }
 }
-
-/**
- * @}
- */
-
-/**
- * @}
- */
