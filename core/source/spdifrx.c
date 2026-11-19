@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file    spdifrx.c
@@ -16,25 +15,14 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "spdifrx.h"
-
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 SPDIFRX_HandleTypeDef hspdif;
 
 /* SPDIFRX init function */
 void MX_SPDIFRX_Init(void) {
-    /* USER CODE BEGIN SPDIFRX_Init 0 */
-
-    /* USER CODE END SPDIFRX_Init 0 */
-
-    /* USER CODE BEGIN SPDIFRX_Init 1 */
-
-    /* USER CODE END SPDIFRX_Init 1 */
     hspdif.Instance               = SPDIFRX;
     hspdif.Init.InputSelection    = SPDIFRX_INPUT_IN0;
     hspdif.Init.Retries           = SPDIFRX_MAXRETRIES_NONE;
@@ -49,19 +37,12 @@ void MX_SPDIFRX_Init(void) {
     if(HAL_SPDIFRX_Init(&hspdif) != HAL_OK) {
         Error_Handler();
     }
-    /* USER CODE BEGIN SPDIFRX_Init 2 */
-
-    /* USER CODE END SPDIFRX_Init 2 */
 }
 
 void HAL_SPDIFRX_MspInit(SPDIFRX_HandleTypeDef *spdifrxHandle) {
     GPIO_InitTypeDef         GPIO_InitStruct     = {0};
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
     if(spdifrxHandle->Instance == SPDIFRX) {
-        /* USER CODE BEGIN SPDIFRX_MspInit 0 */
-
-        /* USER CODE END SPDIFRX_MspInit 0 */
-
         /** Initializes the peripherals clock
          */
         PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SPDIFRX;
@@ -87,18 +68,11 @@ void HAL_SPDIFRX_MspInit(SPDIFRX_HandleTypeDef *spdifrxHandle) {
         GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
         GPIO_InitStruct.Alternate = GPIO_AF8_SPDIFRX;
         HAL_GPIO_Init(SPDIF_RX0_GPIO_Port, &GPIO_InitStruct);
-
-        /* USER CODE BEGIN SPDIFRX_MspInit 1 */
-
-        /* USER CODE END SPDIFRX_MspInit 1 */
     }
 }
 
 void HAL_SPDIFRX_MspDeInit(SPDIFRX_HandleTypeDef *spdifrxHandle) {
     if(spdifrxHandle->Instance == SPDIFRX) {
-        /* USER CODE BEGIN SPDIFRX_MspDeInit 0 */
-
-        /* USER CODE END SPDIFRX_MspDeInit 0 */
         /* Peripheral clock disable */
         __HAL_RCC_SPDIFRX_CLK_DISABLE();
 
@@ -106,13 +80,5 @@ void HAL_SPDIFRX_MspDeInit(SPDIFRX_HandleTypeDef *spdifrxHandle) {
         PD7     ------> SPDIFRX_IN0
         */
         HAL_GPIO_DeInit(SPDIF_RX0_GPIO_Port, SPDIF_RX0_Pin);
-
-        /* USER CODE BEGIN SPDIFRX_MspDeInit 1 */
-
-        /* USER CODE END SPDIFRX_MspDeInit 1 */
     }
 }
-
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */

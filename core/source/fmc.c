@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * File Name          : FMC.c
@@ -16,28 +15,15 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
 #include "fmc.h"
-
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 SDRAM_HandleTypeDef hsdram1;
 
 /* FMC initialization function */
 void MX_FMC_Init(void) {
-    /* USER CODE BEGIN FMC_Init 0 */
-
-    /* USER CODE END FMC_Init 0 */
-
     FMC_SDRAM_TimingTypeDef SdramTiming = {0};
-
-    /* USER CODE BEGIN FMC_Init 1 */
-
-    /* USER CODE END FMC_Init 1 */
 
     /** Perform the SDRAM1 memory initialization sequence
      */
@@ -65,18 +51,11 @@ void MX_FMC_Init(void) {
     if(HAL_SDRAM_Init(&hsdram1, &SdramTiming) != HAL_OK) {
         Error_Handler();
     }
-
-    /* USER CODE BEGIN FMC_Init 2 */
-
-    /* USER CODE END FMC_Init 2 */
 }
 
 static uint32_t FMC_Initialized = 0;
 
 static void HAL_FMC_MspInit(void) {
-    /* USER CODE BEGIN FMC_MspInit 0 */
-
-    /* USER CODE END FMC_MspInit 0 */
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     if(FMC_Initialized) {
         return;
@@ -181,28 +160,15 @@ static void HAL_FMC_MspInit(void) {
     GPIO_InitStruct.Alternate = GPIO_AF12_FMC;
 
     HAL_GPIO_Init(FMC_SDCKE0_GPIO_Port, &GPIO_InitStruct);
-
-    /* USER CODE BEGIN FMC_MspInit 1 */
-
-    /* USER CODE END FMC_MspInit 1 */
 }
 
 void HAL_SDRAM_MspInit(SDRAM_HandleTypeDef *sdramHandle) {
-    /* USER CODE BEGIN SDRAM_MspInit 0 */
-
-    /* USER CODE END SDRAM_MspInit 0 */
     HAL_FMC_MspInit();
-    /* USER CODE BEGIN SDRAM_MspInit 1 */
-
-    /* USER CODE END SDRAM_MspInit 1 */
 }
 
 static uint32_t FMC_DeInitialized = 0;
 
 static void HAL_FMC_MspDeInit(void) {
-    /* USER CODE BEGIN FMC_MspDeInit 0 */
-
-    /* USER CODE END FMC_MspDeInit 0 */
     if(FMC_DeInitialized) {
         return;
     }
@@ -254,37 +220,15 @@ static void HAL_FMC_MspDeInit(void) {
     HAL_GPIO_DeInit(GPIOE,
                     FMC_NBL1_Pin | FMC_NBL0_Pin | FMC_D5_Pin | FMC_D6_Pin | FMC_D8_Pin | FMC_D11_Pin | FMC_D4_Pin |
                         FMC_D7_Pin | FMC_D9_Pin | FMC_D12_Pin | FMC_D10_Pin);
-
     HAL_GPIO_DeInit(GPIOG, FMC_SDNCAS_Pin | FMC_SDCLK_Pin | FMC_A11_Pin | FMC_A10_Pin | FMC_BA1_Pin | FMC_BA0_Pin);
-
     HAL_GPIO_DeInit(GPIOD, FMC_D2_Pin | FMC_D3_Pin | FMC_D1_Pin | FMC_D15_Pin | FMC_D0_Pin | FMC_D14_Pin | FMC_D13_Pin);
-
     HAL_GPIO_DeInit(GPIOF,
                     FMC_A0_Pin | FMC_A1_Pin | FMC_A2_Pin | FMC_A3_Pin | FMC_A4_Pin | FMC_A5_Pin | FMC_A6_Pin |
                         FMC_A9_Pin | FMC_A7_Pin | FMC_A8_Pin | FMC_SDNRAS_Pin);
-
     HAL_GPIO_DeInit(GPIOH, FMC_SDNME_Pin | FMC_SDNE0_Pin);
-
     HAL_GPIO_DeInit(FMC_SDCKE0_GPIO_Port, FMC_SDCKE0_Pin);
-
-    /* USER CODE BEGIN FMC_MspDeInit 1 */
-
-    /* USER CODE END FMC_MspDeInit 1 */
 }
 
 void HAL_SDRAM_MspDeInit(SDRAM_HandleTypeDef *sdramHandle) {
-    /* USER CODE BEGIN SDRAM_MspDeInit 0 */
-
-    /* USER CODE END SDRAM_MspDeInit 0 */
     HAL_FMC_MspDeInit();
-    /* USER CODE BEGIN SDRAM_MspDeInit 1 */
-
-    /* USER CODE END SDRAM_MspDeInit 1 */
 }
-/**
- * @}
- */
-
-/**
- * @}
- */

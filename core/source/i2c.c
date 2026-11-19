@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file    i2c.c
@@ -16,25 +15,14 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "i2c.h"
-
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 I2C_HandleTypeDef hi2c3;
 
 /* I2C3 init function */
 void MX_I2C3_Init(void) {
-    /* USER CODE BEGIN I2C3_Init 0 */
-
-    /* USER CODE END I2C3_Init 0 */
-
-    /* USER CODE BEGIN I2C3_Init 1 */
-
-    /* USER CODE END I2C3_Init 1 */
     hi2c3.Instance              = I2C3;
     hi2c3.Init.Timing           = 0x00C0EAFF;
     hi2c3.Init.OwnAddress1      = 0;
@@ -59,9 +47,6 @@ void MX_I2C3_Init(void) {
     if(HAL_I2CEx_ConfigDigitalFilter(&hi2c3, 0) != HAL_OK) {
         Error_Handler();
     }
-    /* USER CODE BEGIN I2C3_Init 2 */
-
-    /* USER CODE END I2C3_Init 2 */
 }
 
 void HAL_I2C_MspInit(I2C_HandleTypeDef *i2cHandle) {

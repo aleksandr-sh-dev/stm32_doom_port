@@ -79,7 +79,7 @@ void *_sbrk(ptrdiff_t incr) {
     return (void *)prev_heap_end;
 }
 
-#else
+#else // CONFIG_USE_SDRAM_MEMORY
 
 #define SDRAM_HEAP_SIZE (6 * 1024 * 1024) // 6 MB
 uint8_t sdram_heap[SDRAM_HEAP_SIZE] __attribute__((section(".sdram_data")));

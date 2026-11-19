@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file           : fatfs_platform.c
@@ -15,7 +14,7 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
+
 #include "fatfs_platform.h"
 
 uint8_t BSP_PlatformIsDetected(void) {
@@ -24,8 +23,5 @@ uint8_t BSP_PlatformIsDetected(void) {
     if(HAL_GPIO_ReadPin(SD_DETECT_GPIO_PORT, SD_DETECT_PIN) != GPIO_PIN_RESET) {
         status = SD_NOT_PRESENT;
     }
-    /* USER CODE BEGIN 1 */
-    /* user code can be inserted here */
-    /* USER CODE END 1 */
     return status;
 }

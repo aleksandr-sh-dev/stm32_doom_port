@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file           : main.c
@@ -15,12 +14,10 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
 #include "crc.h"
-#include "dcmi.h"
 #include "dma2d.h"
 #include "eth.h"
 #include "i2c.h"
@@ -29,7 +26,6 @@
 #include "rtc.h"
 #include "sai.h"
 #include "spdifrx.h"
-#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "usb_otg.h"
@@ -50,6 +46,7 @@
 #include "fatfs.h"
 #include "doomgeneric_task.h"
 #include "buttons.h"
+#include "audio_app.h"
 
 /* Private function prototypes -----------------------------------------------*/
 void        SystemClock_Config(void);
@@ -74,12 +71,21 @@ void start_task(void *argument) {
     UNUSED(argument);
 
     // Init logging
-    log_init();
+    int res = log_init();
+    if(res != LOG_OK) {
+        configASSERT(0);
+    }
 
     // Init buttons
-    int res = buttons_init(button_default_bindings, CONFIG_BUTTONS_NUM);
-    if(res != 0) {
+    res = buttons_init(button_default_bindings, CONFIG_BUTTONS_NUM);
+    if(res != BUTTONS_OK) {
         LOG_ERROR(TAG, "Failed to initialize buttons: (%d)", res);
+        configASSERT(0);
+    }
+
+    res = audio_app_init(CONFIG_AUDIO_OUTPUT_DEVICE, CONFIG_AUDIO_DEFAULT_VOLUME);
+    if(res != AUDIO_APP_OK) {
+        LOG_ERROR(TAG, "Failed to initialize audio: (%d)", res);
         configASSERT(0);
     }
 
@@ -87,7 +93,7 @@ void start_task(void *argument) {
     HAL_TIM_Base_Start_IT(&htim8);
 
     // Init FatFS
-    MX_FATFS_Init();
+    fatfs_init();
 
     // Check that SD card is present
     if(BSP_SD_IsDetected() == SD_NOT_PRESENT) {
@@ -104,33 +110,7 @@ void start_task(void *argument) {
     osThreadExit();
 }
 
-/**
- * @brief  The application entry point.
- * @retval int
- */
-int main(void) {
-    /* MPU Configuration--------------------------------------------------------*/
-    MPU_Config();
-
-    /* Enable I-Cache---------------------------------------------------------*/
-    SCB_EnableICache();
-
-    /* Enable D-Cache---------------------------------------------------------*/
-    SCB_EnableDCache();
-
-    /* MCU Configuration--------------------------------------------------------*/
-
-    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-    HAL_Init();
-
-    __HAL_DBGMCU_FREEZE_TIM6();
-
-    /* Configure the system clock */
-    SystemClock_Config();
-
-    /* Configure the peripherals common clocks */
-    PeriphCommonClock_Config();
-
+static void mx_init(void) {
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
     MX_CRC_Init();
@@ -149,6 +129,36 @@ int main(void) {
     MX_USART6_UART_Init();
     MX_USB_OTG_FS_USB_Init();
     MX_USB_OTG_HS_PCD_Init();
+}
+
+static void enable_cache(void) {
+    SCB_EnableICache();
+    SCB_EnableDCache();
+}
+
+/**
+ * @brief  The application entry point.
+ * @retval int
+ */
+int main(void) {
+    /* MPU Configuration--------------------------------------------------------*/
+    MPU_Config();
+
+    // Enable cache
+    enable_cache();
+
+    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+    HAL_Init();
+
+    __HAL_DBGMCU_FREEZE_TIM6();
+
+    /* Configure the system clock */
+    SystemClock_Config();
+
+    /* Configure the peripherals common clocks */
+    PeriphCommonClock_Config();
+
+    mx_init();
 
     // BSP
     BSP_SDRAM_Init();
@@ -161,16 +171,9 @@ int main(void) {
     /* Start scheduler */
     osKernelStart();
 
-    /* We should never get here as control is now taken by the scheduler */
-
     /* Infinite loop */
-    /* USER CODE BEGIN WHILE */
     while(1) {
-        /* USER CODE END WHILE */
-
-        /* USER CODE BEGIN 3 */
     }
-    /* USER CODE END 3 */
 }
 
 /**
@@ -250,12 +253,7 @@ void PeriphCommonClock_Config(void) {
     }
 }
 
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
-
 /* MPU Configuration */
-
 void MPU_Config(void) {
     MPU_Region_InitTypeDef MPU_InitStruct = {0};
 
@@ -315,17 +313,11 @@ void MPU_Config(void) {
  * @retval None
  */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-    /* USER CODE BEGIN Callback 0 */
-
-    /* USER CODE END Callback 0 */
     if(htim->Instance == TIM6) {
         HAL_IncTick();
     } else if(htim->Instance == TIM8) {
         buttons_check();
     }
-    /* USER CODE BEGIN Callback 1 */
-
-    /* USER CODE END Callback 1 */
 }
 
 /**
@@ -333,12 +325,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
  * @retval None
  */
 void Error_Handler(void) {
-    /* USER CODE BEGIN Error_Handler_Debug */
-    /* User can add his own implementation to report the HAL error return state */
     __disable_irq();
     while(1) {
     }
-    /* USER CODE END Error_Handler_Debug */
 }
 #ifdef USE_FULL_ASSERT
 /**
@@ -349,9 +338,5 @@ void Error_Handler(void) {
  * @retval None
  */
 void assert_failed(uint8_t *file, uint32_t line) {
-    /* USER CODE BEGIN 6 */
-    /* User can add his own implementation to report the file name and line number,
-       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-    /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

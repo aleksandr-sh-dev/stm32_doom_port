@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
  ******************************************************************************
  * @file    dma2d.h
@@ -16,7 +15,7 @@
  *
  ******************************************************************************
  */
-/* USER CODE END Header */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __DMA2D_H__
 #define __DMA2D_H__
@@ -28,21 +27,9 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
 extern DMA2D_HandleTypeDef hdma2d;
 
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
-
 void MX_DMA2D_Init(void);
-
-/* USER CODE BEGIN Prototypes */
-
-/* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }

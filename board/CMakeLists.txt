@@ -6,6 +6,7 @@ set(BSP_SUBMODULES
     bsp/
     bsp/STM32F7508/Common
     bsp/STM32F7508/Components
+    bsp/STM32F7508/Components/wm8994
     bsp/STM32F7508/stm32f7508-dk-bsp
     Utilities/
     Utilities/Fonts

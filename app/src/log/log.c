@@ -24,9 +24,11 @@ static int log_out(int ch, lwprintf_t *p) {
     return ch;
 }
 
-void log_init(void) {
+int log_init(void) {
+    int res = LOG_OK;
+
     if(CONFIG_LOG_MODE & UART_LOGGING) {
-        lwprintf_init(log_out);
+        res = lwprintf_init(log_out);
         lwprintf_printf("Initialized logs\r\n");
     }
 
@@ -34,4 +36,6 @@ void log_init(void) {
         LCD_LOG_Init();
         LCD_LOG_SetHeader((uint8_t *)"LOGGING");
     }
+
+    return res;
 }

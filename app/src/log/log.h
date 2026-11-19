@@ -61,4 +61,8 @@
 #define LOG_ERROR(tag, fmt, ...)
 #endif
 
-void log_init(void);
+typedef enum {
+    LOG_OK = 0,
+} log_err_t;
+
+int log_init(void);
