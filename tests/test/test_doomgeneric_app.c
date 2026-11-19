@@ -13,6 +13,7 @@
 #include "mock_stm32f7508_discovery_lcd.h"
 #include "mock_stm32f7xx_hal_gpio.h"
 #include "mock_buttons.h"
+#include "mock_doomgeneric_audio.h"
 
 #define TEST_STRETCH_FRAME_TOP_LEFT_PIXELS     (0xAA)
 #define TEST_STRETCH_FRAME_BOTTOM_RIGHT_PIXELS (0xBB)
@@ -42,6 +43,9 @@ static int pressed;
 static unsigned char *doomkey;
 
 void setUp(void) {
+    DG_AudioStart_IgnoreAndReturn(0);
+    DG_FillAudioBuffer_Ignore();
+
     doomkey = malloc(sizeof(unsigned char*));
 
     mock_buttons_data.bindings = test_bindings;

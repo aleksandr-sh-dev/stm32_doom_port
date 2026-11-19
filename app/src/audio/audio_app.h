@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "stm32f7508_discovery_audio.h"
 #include "stm32f7xx_hal_i2s.h"
@@ -13,8 +14,8 @@ typedef enum {
 typedef enum {
     AUDIO_APP_OUTPUT_DEVICE_SPEAKER    = OUTPUT_DEVICE_SPEAKER,
     AUDIO_APP_OUTPUT_DEVICE_HEADPHONES = OUTPUT_DEVICE_HEADPHONE,
-    AUDIO_APP_OUTPUT_BOTH              = OUTPUT_DEVICE_BOTH,
-    AUDIO_APP_OUTPUT_AUTO              = OUTPUT_DEVICE_AUTO,
+    AUDIO_APP_OUTPUT_DEVICE_BOTH       = OUTPUT_DEVICE_BOTH,
+    AUDIO_APP_OUTPUT_DEVICE_AUTO       = OUTPUT_DEVICE_AUTO,
 
     AUDIO_APP_OUTPUT_UNKNOWN,
 } audio_app_output_device_t;
@@ -37,19 +38,26 @@ typedef enum {
     AUDIO_APP_PAUSE_AUDIO_ERR,
     AUDIO_APP_RESUME_AUDIO_ERR,
     AUDIO_APP_STOP_AUDIO_ERR,
+    AUDIO_APP_WRONG_MODE_ERR,
 
     AUDIO_APP_UNKNOWN_ERR,
 } audio_app_err_t;
 
+typedef uint8_t audio_app_volume_t;
+
 typedef struct {
     audio_app_output_device_t out_dev;
     audio_app_mode_t          mode;
-    uint8_t                   volume;
+    audio_app_volume_t        volume;
 } audio_app_params_t;
 
-typedef uint8_t audio_app_volume_t;
+typedef struct {
+    audio_app_params_t params;
+    bool               initialized;
+} audio_app_t;
 
-int audio_app_init(audio_app_output_device_t output_device, audio_app_volume_t volume);
-int audio_app_change_volume(audio_app_volume_t volume);
-int audio_app_play(uint16_t *buf, uint32_t size);
-int audio_app_change_mode(audio_app_mode_t mode);
+int  audio_app_init(audio_app_output_device_t output_device, audio_app_volume_t volume);
+void audio_app_deinit(void);
+int  audio_app_change_volume(audio_app_volume_t volume);
+int  audio_app_play(uint16_t *buf, uint32_t size);
+int  audio_app_change_mode(audio_app_mode_t mode);

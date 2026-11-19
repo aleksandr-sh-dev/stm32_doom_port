@@ -24,7 +24,7 @@ LTDC_HandleTypeDef hltdc;
 /* LTDC init function */
 void MX_LTDC_Init(void) {
     LTDC_LayerCfgTypeDef pLayerCfg = {0};
-    
+
     hltdc.Instance                = LTDC;
     hltdc.Init.HSPolarity         = LTDC_HSPOLARITY_AL;
     hltdc.Init.VSPolarity         = LTDC_VSPOLARITY_AL;

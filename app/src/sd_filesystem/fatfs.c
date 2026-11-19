@@ -23,7 +23,7 @@ __ALIGNED_32__ char  SDPath[4]; /* SD logical drive path */
 __ALIGNED_32__ FATFS SDFatFS;   /* File system object for SD logical drive */
 __ALIGNED_32__ FIL   SDFile;    /* File object for SD */
 
-void MX_FATFS_Init(void) {
+void fatfs_init(void) {
     /*## FatFS: Link the SD driver ###########################*/
     retSD = FATFS_LinkDriver(&SD_Driver, SDPath);
 }

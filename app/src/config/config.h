@@ -49,5 +49,5 @@ static const button_binding_t button_default_bindings[] = {
 #define CONFIG_USE_SDRAM_MEMORY
 
 // AUDIO
-#define CONFIG_AUDIO_OUTPUT_DEVICE  (AUDIO_APP_OUTPUT_BOTH)
+#define CONFIG_AUDIO_OUTPUT_DEVICE  (AUDIO_APP_OUTPUT_DEVICE_BOTH)
 #define CONFIG_AUDIO_DEFAULT_VOLUME (10)

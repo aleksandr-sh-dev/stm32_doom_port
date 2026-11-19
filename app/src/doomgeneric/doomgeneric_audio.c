@@ -1,12 +1,12 @@
 /*
- * dg_audio.c - software mixer + DMA for doomgeneric on STM32F7 (BSP audio out)
+ * doomgeneric_audio.c - software mixer + DMA for doomgeneric on STM32F7 (BSP audio out)
  */
 #include "doomgeneric_audio.h"
 
 #include <string.h>
 
 #include "audio_app.h"
-#include "stm32f7xx.h" /* CMSIS: PRIMASK, SCB D-cache ops */
+#include "stm32f7xx.h"
 
 #define MIX_CHUNK_FRAMES 128 /* stack use in the IRQ: ~1 KB acc + 0.5 KB music tmp */
 

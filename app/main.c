@@ -93,7 +93,7 @@ void start_task(void *argument) {
     HAL_TIM_Base_Start_IT(&htim8);
 
     // Init FatFS
-    MX_FATFS_Init();
+    fatfs_init();
 
     // Check that SD card is present
     if(BSP_SD_IsDetected() == SD_NOT_PRESENT) {
@@ -131,6 +131,11 @@ static void mx_init(void) {
     MX_USB_OTG_HS_PCD_Init();
 }
 
+static void enable_cache(void) {
+    SCB_EnableICache();
+    SCB_EnableDCache();
+}
+
 /**
  * @brief  The application entry point.
  * @retval int
@@ -139,11 +144,8 @@ int main(void) {
     /* MPU Configuration--------------------------------------------------------*/
     MPU_Config();
 
-    /* Enable I-Cache---------------------------------------------------------*/
-    SCB_EnableICache();
-
-    /* Enable D-Cache---------------------------------------------------------*/
-    SCB_EnableDCache();
+    // Enable cache
+    enable_cache();
 
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     HAL_Init();
